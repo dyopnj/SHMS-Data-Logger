@@ -58,3 +58,54 @@ npm run build
 | PUT | `/api/threshold/:param` | Ubah threshold |
 | GET | `/api/node/:nodeId/config` | Konfigurasi node |
 | PUT | `/api/node/:nodeId/config` | Ubah sampling rate |
+
+## Node Sensor (ESP32)
+
+Folder `node/` — firmware ESP32 untuk node sensor MPU9250.
+
+### Hardware
+- ESP32 Dev Board
+- MPU9250 (accel + gyro + mag)
+- Micro SD Card Module (SPI)
+- RTC DS3231 (I2C)
+
+### Fitur
+- Sampling 200Hz, buffer 1 detik → RMS vibration
+- Complementary filter → pitch/roll + delta dari baseline
+- Kirim processed data via MQTT tiap 1 detik
+- Kirim raw window (256 sampel) tiap 30 detik untuk FFT backend
+- Backup semua data ke SD card (CSV)
+- Auto-calibrate baseline tilt setelah 10 detik
+- Heartbeat status tiap 30 detik
+
+### Pakai PlatformIO
+```bash
+cd node
+pio run --target upload
+pio device monitor
+```
+
+### Pakai Arduino IDE
+1. Buka `node/node.ino` di Arduino IDE
+2. Install library: `Adafruit MPU6050`, `PubSubClient`, `RTClib`
+3. Edit `config.h` — isi SSID, password, IP broker
+4. Pilih board ESP32 Dev Module → Upload
+
+### Edit config.h
+```cpp
+const char* WIFI_SSID = "SSID_ANDA";
+const char* WIFI_PASS = "PASSWORD_ANDA";
+const char* MQTT_BROKER = "192.168.1.100";
+const char* NODE_ID = "node_01";
+```
+
+## Mock Publisher
+
+Folder `mock/` — simulasi data sensor untuk testing tanpa hardware.
+
+```bash
+npm run dev          # (dari terminal 1 — backend)
+npx tsx mock/publisher.ts   # (dari terminal 2 — mock)
+```
+
+Menerbitkan data palsu tiap 1 detik untuk kedua node, termasuk raw window tiap 30 detik.
