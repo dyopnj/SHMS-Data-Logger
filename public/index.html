@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge SHMS - Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🏗️ Bridge Structural Health Monitoring</h1>
+  <span id="status-indicator" class="status-dot green"></span>
+  <span id="status-text">Connected</span>
+</header>
+
+<main>
+  <!-- Node Status -->
+  <section class="cards" id="node-cards"></section>
+
+  <!-- Charts -->
+  <section class="charts">
+    <div class="chart-box"><h3>RMS Getaran</h3><canvas id="chart-rms"></canvas></div>
+    <div class="chart-box"><h3>Tilt Delta (Pitch)</h3><canvas id="chart-pitch"></canvas></div>
+  </section>
+
+  <!-- FFT & Alerts -->
+  <section class="bottom-panel">
+    <div class="panel">
+      <h3>Dominant Frequency</h3>
+      <div id="fft-display"></div>
+    </div>
+    <div class="panel">
+      <h3>Alert Log</h3>
+      <div id="alert-list"></div>
+      <button onclick="exportAlerts()">⬇ Export CSV</button>
+    </div>
+    <div class="panel">
+      <h3>Konfigurasi</h3>
+      <label>Threshold Getaran: <input type="number" id="th-vib" step="0.1" onchange="updateThreshold('vibration')"></label>
+      <label>Threshold Tilt (°): <input type="number" id="th-tilt" step="0.1" onchange="updateThreshold('tilt')"></label>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
