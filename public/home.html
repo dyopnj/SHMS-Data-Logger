@@ -70,74 +70,90 @@
   </div>
 </div>
 
-<!-- ─── TOP ROW: RMS + Orientation + FFT ─── -->
+<!-- ─── TOP ROW: RMS + Freq (kiri) | Tilt (kanan) ─── -->
 <div class="grid grid-cols-12 gap-gutter">
 
-<!-- RMS Getaran -->
-<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
-  <div class="p-4 border-b border-outline-variant bg-surface-container-high">
-    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">sensors</span> Vibration RMS</h3>
-  </div>
-  <div class="p-4">
-    <div class="grid grid-cols-2 gap-4">
-      <div class="text-center">
-        <span class="value-label">Node 01</span>
-        <div class="value-rms text-primary">0.083</div>
-      </div>
-      <div class="text-center border-l border-outline-variant">
-        <span class="value-label">Node 02</span>
-        <div class="value-rms text-tertiary">0.091</div>
+<!-- Kiri: RMS + Dominant Freq stacked -->
+<div class="col-span-12 md:col-span-6 space-y-gutter">
+
+  <!-- RMS Getaran -->
+  <div class="bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+    <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+      <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">sensors</span> Vibration RMS</h3>
+    </div>
+    <div class="p-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center">
+          <span class="value-label">Node 01</span>
+          <div class="value-rms text-primary">0.083</div>
+        </div>
+        <div class="text-center border-l border-outline-variant">
+          <span class="value-label">Node 02</span>
+          <div class="value-rms text-tertiary">0.091</div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Dominant Freq -->
+  <div class="bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+    <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+      <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">equalizer</span> Dominant Freq</h3>
+    </div>
+    <div class="p-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center">
+          <span class="value-label">Node 01</span>
+          <div class="value-rms text-primary">5.21</div>
+          <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+        </div>
+        <div class="text-center border-l border-outline-variant">
+          <span class="value-label">Node 02</span>
+          <div class="value-rms text-tertiary">4.87</div>
+          <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Orientation / Tilt -->
-<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+<!-- Kanan: Tilt -->
+<div class="col-span-12 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
   <div class="p-4 border-b border-outline-variant bg-surface-container-high">
     <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">view_in_ar</span> Tilt</h3>
   </div>
-  <div class="p-4 space-y-3">
-    <div class="flex justify-between items-center">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">Roll</span>
-      <span class="font-label-mono text-primary font-bold">0.12°</span>
-      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.02°</span>
-    </div>
-    <div class="flex justify-between items-center">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">Pitch</span>
-      <span class="font-label-mono text-secondary font-bold">-0.45°</span>
-      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.05°</span>
-    </div>
-    <div class="flex justify-between items-center">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">Roll</span>
-      <span class="font-label-mono text-tertiary font-bold">0.14°</span>
-      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.03°</span>
-    </div>
-    <div class="flex justify-between items-center">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">Pitch</span>
-      <span class="font-label-mono text-primary font-bold">-0.42°</span>
-      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.04°</span>
-    </div>
-    <div class="text-[10px] text-on-surface-variant text-right font-label-mono">Node 01 · Node 02</div>
-  </div>
-</div>
-
-<!-- FFT Analysis -->
-<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
-  <div class="p-4 border-b border-outline-variant bg-surface-container-high">
-    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">frequency</span> Dominant Freq</h3>
-  </div>
-  <div class="p-4">
-    <div class="grid grid-cols-2 gap-4">
-      <div class="text-center">
-        <span class="value-label">Node 01</span>
-        <div class="value-rms text-primary">5.21</div>
-        <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+  <div class="p-6 space-y-8">
+    <!-- Node 01 -->
+    <div>
+      <div class="text-[14px] font-label-mono text-primary font-bold mb-4">NODE 01</div>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center pl-3 border-l-2 border-primary">
+          <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">0.12°</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.02°</span>
+        </div>
+        <div class="flex justify-between items-center pl-3 border-l-2 border-secondary">
+          <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
+          <span class="text-[14px] font-label-mono text-secondary font-bold">-0.45°</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.05°</span>
+        </div>
       </div>
-      <div class="text-center border-l border-outline-variant">
-        <span class="value-label">Node 02</span>
-        <div class="value-rms text-tertiary">4.87</div>
-        <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+    </div>
+    <!-- Node 02 -->
+    <div>
+      <div class="text-[14px] font-label-mono text-tertiary font-bold mb-4">NODE 02</div>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center pl-3 border-l-2 border-tertiary">
+          <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
+          <span class="text-[14px] font-label-mono text-tertiary font-bold">0.14°</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.03°</span>
+        </div>
+        <div class="flex justify-between items-center pl-3 border-l-2 border-primary/50">
+          <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">-0.42°</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.04°</span>
+        </div>
       </div>
     </div>
   </div>
@@ -148,7 +164,7 @@
 <!-- ─── RAW DATA (dibawah, tidak menonjol) ─── -->
 <div class="opacity-50 hover:opacity-100 transition-opacity duration-300">
 <div class="flex items-center gap-2 mb-2 px-1">
-  <span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_down</span>
+  <span class="material-symbols-outlined text-[16px] text-on-surface-variant">raw_on</span>
   <span class="font-label-mono text-[10px] text-on-surface-variant uppercase tracking-widest">Raw Sensor Data</span>
   <div class="flex-1 h-px bg-outline-variant"></div>
 </div>
