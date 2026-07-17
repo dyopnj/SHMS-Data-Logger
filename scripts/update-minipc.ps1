@@ -79,11 +79,11 @@ Log "[4/6] Git pull..."
 try {
     Push-Location $root
     git stash --include-untracked 2>&1 | Out-Null
-    git pull --rebase origin main 2>&1 | ForEach-Object { Log $_ }
+    git pull --rebase origin master 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
         Log "  Rebase gagal, fallback ke reset --hard..."
         git fetch origin 2>&1 | Out-Null
-        git reset --hard origin/main 2>&1 | ForEach-Object { Log $_ }
+        git reset --hard origin/master 2>&1 | ForEach-Object { Log $_ }
     }
     Pop-Location
 } catch {
@@ -106,8 +106,14 @@ Log "--- START SERVICE ---"
 # Start Mosquitto
 if ($mqttSvc) {
     if ($mqttSvc.Status -ne 'Running') {
-        Start-Service mosquitto
-        Log "  Mosquitto: di-start"
+        try {
+            Start-Service mosquitto -ErrorAction Stop
+            Log "  Mosquitto: di-start"
+        } catch {
+            Log "  Gagal start service Mosquitto (butuh Admin)."
+            Log "  Jalankan PowerShell sebagai Administrator, lalu: Start-Service mosquitto"
+            Log "  Atau start manual: & 'C:\Program Files\Mosquitto\mosquitto.exe' -v"
+        }
     } else {
         Log "  Mosquitto: sudah running"
     }
