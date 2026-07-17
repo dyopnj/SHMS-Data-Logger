@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
 <aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
 <div class="mb-8 px-2">
   <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: ACTIVE</p>
+  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: OFFLINE</p>
 </div>
 <nav class="space-y-2 flex-1">
   <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
@@ -30,13 +30,13 @@
   <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
   <div class="flex items-center gap-3">
     <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">LIVE</span>
+    <span class="font-label-mono text-label-mono text-secondary">OFFLINE</span>
   </div>
 </header>
 
 <div class="p-margin-desktop space-y-gutter">
 
-<!-- ─── Node Status ─── -->
+<!-- --- Node Status --- -->
 <div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-wrap items-center justify-between">
   <div class="flex items-center gap-6 flex-wrap">
     <div class="flex items-center gap-2">
@@ -49,8 +49,8 @@
         <div class="flex items-center gap-2 mt-1">
           <span class="material-symbols-outlined text-[18px] text-primary">wifi</span>
           <span class="material-symbols-outlined text-[18px] text-secondary">battery_full</span>
-          <span class="text-secondary font-bold text-body-md">100%</span>
-          <span class="text-secondary font-bold text-body-md">ONLINE</span>
+          <span class="text-secondary font-bold text-body-md">--%</span>
+          <span class="text-secondary font-bold text-body-md">OFFLINE</span>
         </div>
       </div>
       <div>
@@ -58,19 +58,19 @@
         <div class="flex items-center gap-2 mt-1">
           <span class="material-symbols-outlined text-[18px] text-primary">wifi</span>
           <span class="material-symbols-outlined text-[18px] text-tertiary">battery_horiz_075</span>
-          <span class="text-tertiary font-bold text-body-md">75%</span>
-          <span class="text-secondary font-bold text-body-md">ONLINE</span>
+          <span class="text-tertiary font-bold text-body-md">--%</span>
+          <span class="text-secondary font-bold text-body-md">OFFLINE</span>
         </div>
       </div>
     </div>
   </div>
   <div class="flex gap-2">
-    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant">UPTIME: 142H 22M</span>
-    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary">SAMP: 200HZ</span>
+    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant">UPTIME: --</span>
+    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary">SAMP: --HZ</span>
   </div>
 </div>
 
-<!-- ─── TOP ROW: RMS + Freq (kiri) | Tilt (kanan) ─── -->
+<!-- --- TOP ROW: RMS + Freq (kiri) | Tilt (kanan) --- -->
 <div class="grid grid-cols-12 gap-gutter">
 
 <!-- Kiri: RMS + Dominant Freq stacked -->
@@ -85,11 +85,11 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="text-center">
           <span class="value-label">Node 01</span>
-          <div class="value-rms text-primary">0.083</div>
+          <div class="value-rms text-primary">--</div>
         </div>
         <div class="text-center border-l border-outline-variant">
           <span class="value-label">Node 02</span>
-          <div class="value-rms text-tertiary">0.091</div>
+          <div class="value-rms text-tertiary">--</div>
         </div>
       </div>
     </div>
@@ -104,12 +104,12 @@
       <div class="grid grid-cols-2 gap-4">
         <div class="text-center">
           <span class="value-label">Node 01</span>
-          <div class="value-rms text-primary">5.21</div>
+          <div class="value-rms text-primary">--</div>
           <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
         </div>
         <div class="text-center border-l border-outline-variant">
           <span class="value-label">Node 02</span>
-          <div class="value-rms text-tertiary">4.87</div>
+          <div class="value-rms text-tertiary">--</div>
           <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
         </div>
       </div>
@@ -130,13 +130,13 @@
       <div class="space-y-4">
         <div class="flex justify-between items-center pl-3 border-l-2 border-primary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
-          <span class="text-[14px] font-label-mono text-primary font-bold">0.12°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.02°</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">--�</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --�</span>
         </div>
         <div class="flex justify-between items-center pl-3 border-l-2 border-secondary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
-          <span class="text-[14px] font-label-mono text-secondary font-bold">-0.45°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.05°</span>
+          <span class="text-[14px] font-label-mono text-secondary font-bold">--�</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --�</span>
         </div>
       </div>
     </div>
@@ -146,13 +146,13 @@
       <div class="space-y-4">
         <div class="flex justify-between items-center pl-3 border-l-2 border-tertiary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
-          <span class="text-[14px] font-label-mono text-tertiary font-bold">0.14°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.03°</span>
+          <span class="text-[14px] font-label-mono text-tertiary font-bold">--�</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --�</span>
         </div>
         <div class="flex justify-between items-center pl-3 border-l-2 border-primary/50">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
-          <span class="text-[14px] font-label-mono text-primary font-bold">-0.42°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">Δ 0.04°</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">--�</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --�</span>
         </div>
       </div>
     </div>
@@ -161,7 +161,7 @@
 
 </div><!-- /top row -->
 
-<!-- ─── RAW DATA (dibawah, tidak menonjol) ─── -->
+<!-- --- RAW DATA (dibawah, tidak menonjol) --- -->
 <div class="opacity-50 hover:opacity-100 transition-opacity duration-300">
 <div class="flex items-center gap-2 mb-2 px-1">
   <span class="material-symbols-outlined text-[16px] text-on-surface-variant">raw_on</span>
@@ -179,15 +179,15 @@
   <div class="p-3 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
     <div>
       <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 01</span>
-      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">-0.014</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.043</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">9.844</span></div>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">--</span></div>
     </div>
     <div class="pl-4">
       <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 02</span>
-      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">-0.107</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.006</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">9.791</span></div>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">--</span></div>
     </div>
   </div>
 </div>
@@ -200,15 +200,15 @@
   <div class="p-3 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
     <div>
       <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 01</span>
-      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">0.034</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.079</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">-0.069</span></div>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">--</span></div>
     </div>
     <div class="pl-4">
       <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 02</span>
-      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">0.070</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.078</span></div>
-      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">0.133</span></div>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">--</span></div>
     </div>
   </div>
 </div>
@@ -219,7 +219,7 @@
 </div><!-- /content -->
 
 <footer class="px-margin-desktop py-6 text-center">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
+  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">� 2026 SHMS | Simon Batapa Professional Series</p>
 </footer>
 </main>
 <script src="assets/js/app.js"></script>

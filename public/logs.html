@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
 <meta charset="utf-8">
@@ -14,7 +14,7 @@
 <aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
 <div class="mb-8 px-2">
   <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: ACTIVE</p>
+  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: OFFLINE</p>
 </div>
 <nav class="space-y-2 flex-1">
   <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
@@ -31,7 +31,7 @@
   <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
   <div class="flex items-center gap-3">
     <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">LIVE</span>
+    <span class="font-label-mono text-label-mono text-secondary">OFFLINE</span>
   </div>
 </header>
 <div class="flex-grow overflow-y-auto p-margin-desktop bg-background flex flex-col">
@@ -42,7 +42,7 @@
         <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Date Range</label>
         <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-variant rounded text-sm text-on-surface-variant border border-outline-variant">
           <span class="material-symbols-outlined text-sm">calendar_today</span>
-          <span>Oct 24, 2023 - Oct 31, 2023</span>
+          <span>--</span>
         </div>
       </div>
       <div class="flex flex-col gap-2">
@@ -70,7 +70,7 @@
           <tr class="bg-surface-container-high text-on-surface-variant text-[10px] uppercase tracking-widest font-label-mono">
             <th class="p-3 border-b border-r border-outline-variant text-center sticky left-0 top-0 z-40 bg-surface-container-high" rowspan="2">Timestamp</th>
             <th class="p-3 border-b border-r border-outline-variant text-center sticky left-[120px] top-0 z-40 bg-surface-container-high shadow-[2px_0_5px_rgba(0,0,0,0.3)]" rowspan="2">Node ID</th>
-            <th class="p-2 text-center border-b border-r border-outline-variant bg-primary/10 text-primary" colspan="6">Accelerometer (m/sÂ²)</th>
+            <th class="p-2 text-center border-b border-r border-outline-variant bg-primary/10 text-primary" colspan="6">Accelerometer (m/s²)</th>
             <th class="p-2 text-center border-b border-outline-variant bg-secondary/10 text-secondary" colspan="6">Gyroscope (rad/s)</th>
           </tr>
           <tr class="bg-surface-variant text-on-surface-variant text-[10px] uppercase tracking-widest font-label-mono">
@@ -90,36 +90,36 @@
         </thead>
         <tbody class="text-sm text-on-surface font-label-mono">
           <tr class="hover:bg-surface-variant/50 border-b border-outline-variant/30">
-            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">14:22:01.452</td>
-            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">Node 01</td>
-            <td class="p-2 text-center text-secondary">0.024</td>
-            <td class="p-2 text-center text-secondary">-0.012</td>
-            <td class="p-2 text-center text-secondary">0.981</td>
-            <td class="p-2 text-center text-secondary">0.024</td>
-            <td class="p-2 text-center text-secondary">-0.012</td>
-            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold" style="opacity:0.7">0.981</td>
-            <td class="p-2 text-center text-secondary">0.12</td>
-            <td class="p-2 text-center text-secondary">-0.05</td>
-            <td class="p-2 text-center text-secondary">0.01</td>
-            <td class="p-2 text-center text-secondary">0.12</td>
-            <td class="p-2 text-center text-secondary">-0.05</td>
-            <td class="p-2 text-center text-secondary font-bold">0.01</td>
+            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">--</td>
+            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold" style="opacity:0.7">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary font-bold">--</td>
           </tr>
           <tr class="hover:bg-surface-variant/50 border-b border-outline-variant/30">
-            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">14:22:01.452</td>
-            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">Node 02</td>
-            <td class="p-2 text-center text-secondary">-0.005</td>
-            <td class="p-2 text-center text-secondary">0.041</td>
-            <td class="p-2 text-center text-secondary">1.002</td>
-            <td class="p-2 text-center text-secondary">-0.005</td>
-            <td class="p-2 text-center text-secondary">0.041</td>
-            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold">1.002</td>
-            <td class="p-2 text-center text-secondary">-0.08</td>
-            <td class="p-2 text-center text-secondary">0.11</td>
-            <td class="p-2 text-center text-secondary">-0.02</td>
-            <td class="p-2 text-center text-secondary">-0.08</td>
-            <td class="p-2 text-center text-secondary">0.11</td>
-            <td class="p-2 text-center text-secondary font-bold">-0.02</td>
+            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">--</td>
+            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary">--</td>
+            <td class="p-2 text-center text-secondary font-bold">--</td>
           </tr>
         </tbody>
       </table>
@@ -127,7 +127,7 @@
   </div>
 </div>
 <footer class="px-margin-desktop py-6 text-center shrink-0">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">Â© 2026 SHMS | Simon Batapa Professional Series</p>
+  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
 </footer>
 </main>
 <script src="assets/js/app.js"></script>
