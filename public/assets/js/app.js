@@ -1,27 +1,38 @@
 // ============================================
-// GLOBAL FUNCTIONS
+// SHARED — sidebar, logout, WebSocket helper
 // ============================================
 
-// Logout
-function logout() {
-    if (confirm('Yakin ingin keluar?')) {
-        window.location.href = 'index.html';
-    }
-}
-
 // Highlight sidebar sesuai halaman aktif
-document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop();
-    document.querySelectorAll('.sidebar nav a').forEach(link => {
+document.addEventListener('DOMContentLoaded', function () {
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('aside nav a, .sidebar nav a').forEach(link => {
         const href = link.getAttribute('href');
-        if (href === currentPage) {
+        if (href === page) {
             link.classList.add('bg-secondary-container', 'text-on-secondary-container');
             link.classList.remove('text-on-surface-variant');
         }
     });
 });
 
-// Jika ada tombol logout di header/sidebar, pasang event
-document.querySelectorAll('.btn-logout, .logout-btn').forEach(btn => {
-    btn.addEventListener('click', logout);
-});
+// WebSocket helper — returns { ws, onData(cb) }
+function connectWS(onData) {
+    const ws = new WebSocket(`ws://${location.host}`);
+    ws.onmessage = e => {
+        try {
+            const msg = JSON.parse(e.data);
+            if (msg.type === 'data') onData(msg.payload);
+        } catch (_) { }
+    };
+    ws.onclose = () => {
+        document.querySelectorAll('.status-led').forEach(el => {
+            el.className = 'status-led offline';
+        });
+    };
+    return ws;
+}
+
+// Fetch helper
+async function api(path) {
+    const r = await fetch(path);
+    return r.json();
+}

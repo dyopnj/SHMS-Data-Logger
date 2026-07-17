@@ -1,43 +1,41 @@
-/* ===== CUSTOM SCROLLBAR ===== */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #0e1416;
-}
-::-webkit-scrollbar-thumb {
-    background: #3d494c;
-    border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #4cd7f6;
-}
+/* ===== RESET & BASE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html.dark { color-scheme: dark; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0e1416; }
+::-webkit-scrollbar-thumb { background: #3d494c; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #4cd7f6; }
 
 /* ===== PULSE ANIMATION ===== */
-.pulse-emerald {
-    animation: pulse 2s infinite;
-}
+.pulse-emerald { animation: pulse 2s infinite; }
 @keyframes pulse {
     0% { opacity: 1; }
     50% { opacity: 0.4; }
     100% { opacity: 1; }
 }
 
-/* ===== ACTIVE GLOW FOR CARDS ===== */
-.active-glow:hover {
-    box-shadow: 0 0 20px rgba(76,215,246,0.08);
+/* ===== CARD HOVER GLOW ===== */
+.active-glow:hover { box-shadow: 0 0 20px rgba(76,215,246,0.08); }
+
+/* ===== STATUS LED ===== */
+.status-led { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.status-led.online { background: #4edea3; box-shadow: 0 0 6px #4edea3; }
+.status-led.offline { background: #ffb4ab; box-shadow: 0 0 6px #ffb4ab; }
+
+/* ===== ALERT BADGE ===== */
+.alert-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.alert-badge.ok { background: #0d5320; color: #7ee787; }
+.alert-badge.danger { background: #7e1616; color: #ff7b72; }
+
+/* ===== RESPONSIVE SIDEBAR ===== */
+@media (max-width: 768px) {
+    .sidebar { width: 60px !important; }
+    .sidebar .nav-text { display: none; }
+    .main-content { margin-left: 60px !important; }
 }
 
-/* ===== RESPONSIVE FIX ===== */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 60px !important;
-    }
-    .sidebar h2 small, .sidebar .nav-text {
-        display: none;
-    }
-    .main-content {
-        margin-left: 60px !important;
-    }
-}
+/* ===== VALUE DISPLAY ===== */
+.value-rms { font-size: 1.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+.value-label { font-size: 11px; color: #869397; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }

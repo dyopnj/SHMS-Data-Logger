@@ -1,405 +1,156 @@
-<!DOCTYPE html><html class="dark" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "primary": "#4cd7f6",
-                        "error-container": "#93000a",
-                        "on-primary-fixed-variant": "#004e5c",
-                        "on-tertiary-fixed-variant": "#653e00",
-                        "on-primary-container": "#00424f",
-                        "on-tertiary-container": "#563400",
-                        "on-primary": "#003640",
-                        "secondary-container": "#00a572",
-                        "surface-tint": "#4cd7f6",
-                        "surface-container-highest": "#303638",
-                        "primary-container": "#06b6d4",
-                        "tertiary": "#ffb95f",
-                        "secondary": "#4edea3",
-                        "tertiary-fixed-dim": "#ffb95f",
-                        "outline": "#869397",
-                        "on-secondary-fixed": "#002113",
-                        "secondary-fixed": "#6ffbbe",
-                        "on-primary-fixed": "#001f26",
-                        "inverse-surface": "#dee3e6",
-                        "on-error": "#690005",
-                        "surface-container-low": "#171d1e",
-                        "on-surface": "#dee3e6",
-                        "surface-dim": "#0e1416",
-                        "surface-container-high": "#252b2d",
-                        "on-error-container": "#ffdad6",
-                        "tertiary-fixed": "#ffddb8",
-                        "surface-variant": "#303638",
-                        "on-tertiary": "#472a00",
-                        "background": "#0e1416",
-                        "on-secondary-fixed-variant": "#005236",
-                        "on-background": "#dee3e6",
-                        "error": "#ffb4ab",
-                        "on-tertiary-fixed": "#2a1700",
-                        "on-surface-variant": "#bcc9cd",
-                        "primary-fixed": "#acedff",
-                        "outline-variant": "#3d494c",
-                        "tertiary-container": "#e79400",
-                        "inverse-primary": "#00687a",
-                        "on-secondary": "#003824",
-                        "inverse-on-surface": "#2b3133",
-                        "surface-container": "#1b2122",
-                        "surface-bright": "#343a3c",
-                        "surface-container-lowest": "#090f11",
-                        "primary-fixed-dim": "#4cd7f6",
-                        "on-secondary-container": "#00311f",
-                        "surface": "#0e1416",
-                        "secondary-fixed-dim": "#4edea3"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "spacing": {
-                        "margin-desktop": "32px",
-                        "margin-mobile": "16px",
-                        "sidebar-width": "260px",
-                        "gutter": "16px",
-                        "base": "4px"
-                    },
-                    "fontFamily": {
-                        "headline-lg": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "display": ["Inter"],
-                        "body-md": ["Inter"],
-                        "label-mono": ["JetBrains Mono"],
-                        "body-lg": ["Inter"]
-                    },
-                    "fontSize": {
-                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                        "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
-                        "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
-                    }
-                },
-            },
-        }
-    }catch(_e){}</script></head><body class="bg-background text-on-background antialiased flex">
-<!-- SideNavBar (Predicted Component) -->
-<aside class="fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
-<div class="mb-10 px-2"><h1 class="font-headline-md text-headline-md font-bold text-primary">Bridge Monitor</h1>
-<p class="text-secondary font-label-mono uppercase tracking-widest text-[10px] whitespace-nowrap">NODE STATUS: ACTIVE</p></div>
+﻿<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="bg-background text-on-background antialiased flex">
+<aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
+<div class="mb-8 px-2">
+  <h1 class="font-headline-md text-headline-md font-bold text-primary">Bridge Monitor</h1>
+  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: ACTIVE</p>
+</div>
 <nav class="space-y-2 flex-1">
-<!-- Active Tab: Home -->
-<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg transition-all active:scale-95 duration-150" href="home.html">
-<span class="font-body-md text-body-md">Home</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg active:scale-95 duration-150" href="analysis.html">
-<span class="material-symbols-outlined">show_chart</span>
-<span class="font-body-md text-body-md">Analysis</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg active:scale-95 duration-150" href="logs.html">
-<span class="material-symbols-outlined">database</span>
-<span class="font-body-md text-body-md">Logs</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg active:scale-95 duration-150" href="settings.html">
-<span class="material-symbols-outlined">settings</span>
-<span class="font-body-md text-body-md">Settings</span>
-</a>
+  <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
+  <a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">show_chart</span><span class="nav-text font-body-md">Analysis</span></a>
+  <a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">database</span><span class="nav-text font-body-md">Logs</span></a>
+  <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">settings</span><span class="nav-text font-body-md">Settings</span></a>
 </nav>
-<div class="border-outline-variant space-y-2">
-<button class="w-full py-2 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-opacity mb-2">
-                Export Report
-            </button><button class="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg">
-<span class="material-symbols-outlined">help</span>
-<span class="font-body-md text-body-md">Help</span>
-</button>
-<a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 transition-all rounded-lg">
-<span class="material-symbols-outlined">logout</span>
-<span class="font-body-md text-body-md">Logout</span>
-</a>
-
+<div class="border-t border-outline-variant pt-4">
+  <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-lg"><span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span></a>
 </div>
 </aside>
-<!-- Main Content Area -->
-<main class="ml-[260px] flex-1 min-h-screen relative overflow-x-hidden">
-<!-- TopAppBar (Predicted Component Integration) -->
+<main class="ml-[260px] flex-1 min-h-screen">
 <header class="sticky top-0 z-30 flex justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant">
-<div class="flex items-center gap-8">
-<span class="font-headline-md text-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
-<nav class="hidden md:flex gap-6">
-</nav>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-2 text-primary hover:bg-surface-variant rounded-full transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<button class="p-2 text-primary hover:bg-surface-variant rounded-full transition-colors">
-<span class="material-symbols-outlined">account_circle</span>
-</button>
-</div>
+  <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
+  <div class="flex items-center gap-3">
+    <span class="status-led online" id="status-led"></span>
+    <span class="font-label-mono text-label-mono text-secondary" id="status-text">LIVE</span>
+    <button class="p-2 text-primary hover:bg-surface-variant rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+  </div>
 </header>
 <div class="p-margin-desktop space-y-gutter">
-<!-- Dashboard Top Row: Node Status & Live Pulse -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between">
+  <div class="flex items-center gap-6 flex-wrap">
+    <div class="flex items-center gap-2">
+      <span class="status-led online"></span>
+      <span class="font-label-mono text-label-mono uppercase tracking-widest text-secondary">Live Monitoring</span>
+    </div>
+    <div class="flex gap-6">
+      <div><span class="font-label-mono text-label-mono text-on-surface-variant">NODE 01</span>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-secondary font-bold text-body-md" id="node01-status">ONLINE</span>
+          <span class="text-primary font-label-mono text-label-mono" id="node01-rms">--</span>
+        </div>
+      </div>
+      <div><span class="font-label-mono text-label-mono text-on-surface-variant">NODE 02</span>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-secondary font-bold text-body-md" id="node02-status">ONLINE</span>
+          <span class="text-primary font-label-mono text-label-mono" id="node02-rms">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex gap-2">
+    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant" id="uptime-display">UPTIME: --</span>
+    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary" id="samp-display">SAMP: 200HZ</span>
+  </div>
+</div>
 <div class="grid grid-cols-12 gap-gutter">
-<!-- Node Status Panel (Top-Left Persistent Style) -->
-<div class="col-span-12 bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between lg:col-span-12">
-<div class="flex items-center gap-6 w-full md:w-auto">
-<div class="flex items-center gap-2">
-<div id="status-led" class="w-3 h-3 rounded-full bg-secondary pulse-emerald"></div>
-<span class="font-label-mono text-label-mono uppercase tracking-widest text-secondary">Live Monitoring</span>
+<div class="col-span-12 md:col-span-6 xl:col-span-3 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">sensors</span> Vibration RMS</h3>
+    <span class="font-label-mono text-label-mono text-on-surface-variant">m/s²</span>
+  </div>
+  <div class="p-4 grid grid-cols-2 gap-4">
+    <div class="text-center"><span class="value-label">Node 01</span><div class="value-rms text-primary" id="rms-n1">--</div></div>
+    <div class="text-center border-l border-outline-variant"><span class="value-label">Node 02</span><div class="value-rms text-tertiary" id="rms-n2">--</div></div>
+  </div>
 </div>
-<div class="h-8 w-px bg-outline-variant hidden md:block"></div>
-<div class="flex gap-8">
-<!-- Node 1 -->
-<div class="flex flex-col">
-<span class="font-label-mono text-label-mono text-on-surface-variant">NODE 01</span>
-<div class="flex items-center gap-3 mt-1">
-<span class="material-symbols-outlined text-[18px] text-primary">wifi</span>
-<span class="material-symbols-outlined text-[18px] text-secondary">battery_full</span><span class="text-secondary font-bold text-body-md ml-1">100%</span>
-<span class="text-secondary font-bold text-body-md">ONLINE</span>
+<div class="col-span-12 md:col-span-6 xl:col-span-3 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">magnet</span> Magnetometer</h3>
+    <span class="font-label-mono text-label-mono text-on-surface-variant">µT</span>
+  </div>
+  <div class="p-4 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
+    <div class="space-y-1">
+      <span class="value-label">Node 01</span>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">X</span><span class="text-primary" id="mag-n1-x">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary" id="mag-n1-y">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary" id="mag-n1-z">--</span></div>
+    </div>
+    <div class="pl-4 space-y-1">
+      <span class="value-label">Node 02</span>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">X</span><span class="text-primary" id="mag-n2-x">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary" id="mag-n2-y">--</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary" id="mag-n2-z">--</span></div>
+    </div>
+  </div>
 </div>
+<div class="col-span-12 md:col-span-6 xl:col-span-3 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">view_in_ar</span> Orientation</h3>
+  </div>
+  <div class="p-4 space-y-4">
+    <div><span class="value-label">Roll</span>
+      <div class="flex justify-between items-end">
+        <span class="text-display font-display text-primary" id="roll-angle">--°</span>
+        <span class="font-label-mono text-label-mono text-on-surface-variant">Δ <span id="roll-diff" class="text-secondary">--</span>°</span>
+      </div>
+    </div>
+    <div><span class="value-label">Pitch</span>
+      <div class="flex justify-between items-end">
+        <span class="text-display font-display text-primary" id="pitch-angle">--°</span>
+        <span class="font-label-mono text-label-mono text-on-surface-variant">Δ <span id="pitch-diff" class="text-tertiary">--</span>°</span>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- Node 2 -->
-<div class="flex flex-col">
-<span class="font-label-mono text-label-mono text-on-surface-variant">NODE 02</span>
-<div class="flex items-center gap-3 mt-1">
-<span class="material-symbols-outlined text-[18px] text-primary">wifi</span>
-<span class="material-symbols-outlined text-[18px] text-tertiary">battery_horiz_075</span><span class="text-tertiary font-bold text-body-md ml-1">75%</span>
-<span class="text-secondary font-bold text-body-md">ONLINE</span>
-</div>
-</div>
-</div>
-</div>
-<div class="flex gap-2 w-full md:w-auto justify-end">
-<span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant">UPTIME: 142H 22M</span>
-<span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary">SAMP: 100HZ</span>
-</div>
-</div>
-<!-- Global Structural Health Card -->
-</div>
-<!-- Bento Grid Sensor Data -->
-<div class="grid grid-cols-12 gap-gutter">
-<!-- Accelerometer Card -->
-<div class="col-span-12 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-0 overflow-hidden flex flex-col group hover:border-primary/50 transition-colors xl:col-span-6">
-<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-<h3 class="font-headline-md text-headline-md flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">speed</span> Accelerometer
-                        </h3>
-<span class="font-label-mono text-label-mono text-on-surface-variant">m/s²</span>
-</div>
-<div class="p-4 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
-<!-- Node 1 -->
-<div class="space-y-3">
-<span class="font-label-mono text-label-mono text-on-surface-variant block">NODE 01</span>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">X</span>
-<span id="accel-n1-x" class="font-label-mono text-primary font-bold text-body-lg">-0.014</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Y</span>
-<span id="accel-n1-y" class="font-label-mono text-secondary font-bold text-body-lg">-0.043</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Z</span>
-<span id="accel-n1-z" class="font-label-mono text-tertiary font-bold text-body-lg">9.844</span>
+<div class="col-span-12 md:col-span-6 xl:col-span-3 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">frequency</span> Dominant Freq</h3>
+    <span class="font-label-mono text-label-mono text-on-surface-variant">Hz</span>
+  </div>
+  <div class="p-4 grid grid-cols-2 gap-4">
+    <div class="text-center"><span class="value-label">Node 01</span><div class="value-rms text-primary" id="freq-n1">--</div></div>
+    <div class="text-center border-l border-outline-variant"><span class="value-label">Node 02</span><div class="value-rms text-tertiary" id="freq-n2">--</div></div>
+  </div>
 </div>
 </div>
-</div>
-<!-- Node 2 -->
-<div class="pl-4 space-y-3">
-<span class="font-label-mono text-label-mono text-on-surface-variant block">NODE 02</span>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">X</span>
-<span id="accel-n2-x" class="font-label-mono text-primary font-bold text-body-lg">-0.107</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Y</span>
-<span id="accel-n2-y" class="font-label-mono text-secondary font-bold text-body-lg">-0.006</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Z</span>
-<span id="accel-n2-z" class="font-label-mono text-tertiary font-bold text-body-lg">9.791</span>
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4">
+  <h3 class="font-headline-md flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-error">warning</span> Alert Log</h3>
+  <div id="alert-list" class="max-h-[120px] overflow-y-auto space-y-1 text-xs font-label-mono"></div>
 </div>
 </div>
-</div>
-</div>
-</div>
-<!-- Gyroscope Card -->
-<div class="col-span-12 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-0 overflow-hidden flex flex-col group hover:border-primary/50 transition-colors xl:col-span-6">
-<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-<h3 class="font-headline-md text-headline-md flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">rotate_right</span> Gyroscope
-                        </h3>
-<span class="font-label-mono text-label-mono text-on-surface-variant">rad/s</span>
-</div>
-<div class="p-4 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
-<!-- Node 1 -->
-<div class="space-y-3">
-<span class="font-label-mono text-label-mono text-on-surface-variant block">NODE 01</span>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">X</span>
-<span id="gyro-n1-x" class="font-label-mono text-primary font-bold text-body-lg">0.034</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Y</span>
-<span id="gyro-n1-y" class="font-label-mono text-secondary font-bold text-body-lg">-0.079</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Z</span>
-<span id="gyro-n1-z" class="font-label-mono text-tertiary font-bold text-body-lg">-0.069</span>
-</div>
-</div>
-</div>
-<!-- Node 2 -->
-<div class="pl-4 space-y-3">
-<span class="font-label-mono text-label-mono text-on-surface-variant block">NODE 02</span>
-<div class="flex flex-col gap-1">
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">X</span>
-<span id="gyro-n2-x" class="font-label-mono text-primary font-bold text-body-lg">0.070</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Y</span>
-<span id="gyro-n2-y" class="font-label-mono text-secondary font-bold text-body-lg">-0.078</span>
-</div>
-<div class="flex justify-between items-center">
-<span class="text-label-mono text-on-surface-variant">Z</span>
-<span id="gyro-n2-z" class="font-label-mono text-tertiary font-bold text-body-lg">0.133</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Magnetometer Card -->
-<!-- Orientation: Roll & Pitch -->
-<div class="col-span-12 bg-surface-container border border-outline-variant rounded-xl p-0 overflow-hidden flex flex-col group hover:border-primary/50 transition-colors xl:col-span-12">
-<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-<h3 class="font-headline-md text-headline-md flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">view_in_ar</span> Orientation Analysis
-                        </h3>
-<div class="flex gap-4">
-<span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-primary"></div> <span class="text-label-mono">Node 01</span></span>
-<span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-secondary"></div> <span class="text-label-mono">Node 02</span></span>
-</div>
-</div>
-<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-<!-- Roll -->
-<div class="space-y-4">
-<div class="flex justify-between items-end">
-<div>
-<span class="font-label-mono text-label-mono text-on-surface-variant uppercase">Roll Angle</span>
-<div id="roll-angle" class="text-display font-display text-primary">0.12°</div>
-</div>
-<div class="text-right">
-<span class="font-label-mono text-label-mono text-on-surface-variant">Δ DIFF</span>
-<div id="roll-diff" class="text-headline-md font-headline-md text-secondary">0.02°</div>
-</div>
-</div>
-<!-- Simple Progress Bars to represent values -->
-<div class="space-y-2">
-<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-<div class="bg-primary h-full" style="width: 45%;"></div>
-</div>
-<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-<div class="bg-secondary h-full" style="width: 47%;"></div>
-</div>
-</div>
-</div>
-<!-- Pitch -->
-<div class="space-y-4">
-<div class="flex justify-between items-end">
-<div>
-<span class="font-label-mono text-label-mono text-on-surface-variant uppercase">Pitch Angle</span>
-<div id="pitch-angle" class="text-display font-display text-primary">-0.45°</div>
-</div>
-<div class="text-right">
-<span class="font-label-mono text-label-mono text-on-surface-variant">Δ DIFF</span>
-<div id="pitch-diff" class="text-headline-md font-headline-md text-tertiary">0.05°</div>
-</div>
-</div>
-<div class="space-y-2">
-<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-<div class="bg-primary h-full" style="width: 60%;"></div>
-</div>
-<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
-<div class="bg-secondary h-full" style="width: 65%;"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Real-time Event Feed -->
-
-</div>
-<!-- Detailed Visual Analysis Section -->
-<div class="grid grid-cols-12 gap-gutter">
-</div>
-</div>
-<!-- System Footer Info -->
-<footer class="px-margin-desktop py-8 text-center">
-<p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">
-                © 2026 Structural Health Monitoring Systems | Simon Batapa Professional Series | All Rights Reserved
-            </p>
+<footer class="px-margin-desktop py-6 text-center">
+  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
 </footer>
 </main>
+<script src="assets/js/app.js"></script>
 <script>
-// === WebSocket real-time + API integration ===
-const ws = new WebSocket(`ws://${location.host}`);
-
-ws.onmessage = (e) => {
-    const msg = JSON.parse(e.data);
-    if (msg.type === 'data') updateDashboard(msg.payload);
-};
-ws.onclose = () => {
-    const led = document.getElementById('status-led');
-    if (led) led.className = 'w-3 h-3 rounded-full bg-error';
-};
-
+const ws = connectWS(updateDashboard);
 function updateDashboard(d) {
-    const n1 = d.node_id === 'node_01';
-    // Accel — kita tampilkan RMS sebagai indikator getaran
-    const accelIds = n1
-        ? ['accel-n1-x', 'accel-n1-y', 'accel-n1-z']
-        : ['accel-n2-x', 'accel-n2-y', 'accel-n2-z'];
-    // X/Y/Z: pake RMS dengan sedikit variasi biar keliatan hidup
-    const rms = d.vibration.rms;
-    document.getElementById(accelIds[0]).textContent = (rms * 0.8).toFixed(3);
-    document.getElementById(accelIds[1]).textContent = (rms * 0.5).toFixed(3);
-    document.getElementById(accelIds[2]).textContent = (9.8 + rms * 0.1).toFixed(3);
-
-    // Gyro — pake delta tilt
-    const gyroIds = n1
-        ? ['gyro-n1-x', 'gyro-n1-y', 'gyro-n1-z']
-        : ['gyro-n2-x', 'gyro-n2-y', 'gyro-n2-z'];
-    document.getElementById(gyroIds[0]).textContent = (d.tilt.pitch_delta * 0.1).toFixed(3);
-    document.getElementById(gyroIds[1]).textContent = (d.tilt.roll_delta * 0.1).toFixed(3);
-    document.getElementById(gyroIds[2]).textContent = (Math.abs(d.tilt.pitch_delta - d.tilt.roll_delta) * 0.05).toFixed(3);
-
-    // Orientation
-    const rollEl = document.getElementById('roll-angle');
-    const pitchEl = document.getElementById('pitch-angle');
-    const rollDiff = document.getElementById('roll-diff');
-    const pitchDiff = document.getElementById('pitch-diff');
-    if (rollEl) rollEl.textContent = d.tilt.roll.toFixed(2) + '°';
-    if (pitchEl) pitchEl.textContent = d.tilt.pitch.toFixed(2) + '°';
-    if (rollDiff) rollDiff.textContent = d.tilt.roll_delta.toFixed(2) + '°';
-    if (pitchDiff) pitchDiff.textContent = d.tilt.pitch_delta.toFixed(2) + '°';
-
-    // Node status — update ONLINE + connection indicator
-    const statusEl = document.querySelector(`#node-${n1 ? '01' : '02'} .text-secondary.font-bold:last-child`);
-    if (statusEl) statusEl.textContent = d.connection_status.toUpperCase();
+    const s = d.node_id === 'node_01' ? 'n1' : 'n2';
+    document.getElementById('rms-'+s).textContent = d.vibration.rms.toFixed(3);
+    document.getElementById(d.node_id+'-rms').textContent = d.vibration.rms.toFixed(3)+' RMS';
+    document.getElementById('mag-'+s+'-x').textContent = d.magnetometer.mag_x.toFixed(1);
+    document.getElementById('mag-'+s+'-y').textContent = d.magnetometer.mag_y.toFixed(1);
+    document.getElementById('mag-'+s+'-z').textContent = d.magnetometer.mag_z.toFixed(1);
+    if (s === 'n1') {
+        document.getElementById('roll-angle').textContent = d.tilt.roll.toFixed(2)+'°';
+        document.getElementById('pitch-angle').textContent = d.tilt.pitch.toFixed(2)+'°';
+        document.getElementById('roll-diff').textContent = d.tilt.roll_delta.toFixed(2);
+        document.getElementById('pitch-diff').textContent = d.tilt.pitch_delta.toFixed(2);
+    }
+    document.getElementById(d.node_id+'-status').textContent = d.connection_status.toUpperCase();
+    document.getElementById('status-led').className = 'status-led '+(d.connection_status==='online'?'online':'offline');
+    document.getElementById('status-text').textContent = d.connection_status==='online'?'LIVE':'OFFLINE';
 }
 </script>
-
-
-
-
-
-
-</body></html>
+</body>
+</html>
