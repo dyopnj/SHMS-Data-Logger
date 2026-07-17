@@ -5,3 +5,6 @@ dist/
 
 public_backup/
 SHMS_SIMON_BATAPA_2026/
+data.db-shm
+data.db-wal
+

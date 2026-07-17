@@ -8,6 +8,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/style.css">
+<title>SHMS - Logs</title>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased">
 <aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
@@ -39,21 +40,11 @@
 <div class="overflow-auto max-h-[70vh]">
 <table class="w-full text-left border-collapse text-xs font-label-mono">
 <thead class="sticky top-0 z-10 bg-surface-container-high text-on-surface-variant uppercase tracking-widest">
-<tr>
-<th class="p-3 border-b border-outline-variant">Timestamp</th>
-<th class="p-3 border-b border-outline-variant">Node</th>
-<th class="p-3 border-b border-outline-variant">RMS</th>
-<th class="p-3 border-b border-outline-variant">Pitch</th>
-<th class="p-3 border-b border-outline-variant">Roll</th>
-<th class="p-3 border-b border-outline-variant">Δ Pitch</th>
-<th class="p-3 border-b border-outline-variant">Δ Roll</th>
-<th class="p-3 border-b border-outline-variant">Mag X</th>
-<th class="p-3 border-b border-outline-variant">Mag Y</th>
-<th class="p-3 border-b border-outline-variant">Mag Z</th>
-<th class="p-3 border-b border-outline-variant">Status</th>
-</tr>
+<tr><th class="p-3 border-b border-outline-variant">Timestamp</th><th class="p-3 border-b border-outline-variant">Node</th><th class="p-3 border-b border-outline-variant">RMS</th><th class="p-3 border-b border-outline-variant">Pitch</th><th class="p-3 border-b border-outline-variant">Roll</th><th class="p-3 border-b border-outline-variant">Status</th></tr>
 </thead>
-<tbody id="logs-body" class="text-on-surface"></tbody>
+<tbody class="text-on-surface">
+<tr class="border-b border-outline-variant/30 hover:bg-surface-variant/30"><td class="p-2">--</td><td class="p-2">--</td><td class="p-2">--</td><td class="p-2">--</td><td class="p-2">--</td><td class="p-2"><span class="alert-badge ok">--</span></td></tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -63,32 +54,5 @@
 </footer>
 </main>
 <script src="assets/js/app.js"></script>
-<script>
-async function loadLogs() {
-    const tbody = document.getElementById('logs-body');
-    let html = '';
-    for (const node of ['node_01','node_02']) {
-        try {
-            const data = await api('/api/readings/'+node+'?limit=50');
-            html += data.map(d => '<tr class="border-b border-outline-variant/30 hover:bg-surface-variant/30">'+
-                '<td class="p-2">'+new Date(d.timestamp).toLocaleTimeString()+'</td>'+
-                '<td class="p-2">'+d.node_id+'</td>'+
-                '<td class="p-2 text-primary">'+d.rms.toFixed(3)+'</td>'+
-                '<td class="p-2">'+d.pitch.toFixed(2)+'</td>'+
-                '<td class="p-2">'+d.roll.toFixed(2)+'</td>'+
-                '<td class="p-2">'+d.pitch_delta.toFixed(2)+'</td>'+
-                '<td class="p-2">'+d.roll_delta.toFixed(2)+'</td>'+
-                '<td class="p-2">'+d.mag_x.toFixed(1)+'</td>'+
-                '<td class="p-2">'+d.mag_y.toFixed(1)+'</td>'+
-                '<td class="p-2">'+d.mag_z.toFixed(1)+'</td>'+
-                '<td class="p-2"><span class="alert-badge '+(d.connection_status==='online'?'ok':'danger')+'">'+d.connection_status+'</span></td>'+
-                '</tr>').join('');
-        } catch(_) {}
-    }
-    tbody.innerHTML = html || '<tr><td colspan="11" class="p-4 text-center text-on-surface-variant">Belum ada data. Jalankan mock publisher atau tunggu node sensor.</td></tr>';
-}
-loadLogs();
-setInterval(loadLogs, 10000);
-</script>
 </body>
 </html>
