@@ -1,0 +1,407 @@
+<!DOCTYPE html><html lang="en" class="dark" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#4cd7f6",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#004e5c",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-primary-container": "#00424f",
+                    "on-tertiary-container": "#563400",
+                    "on-primary": "#003640",
+                    "secondary-container": "#00a572",
+                    "surface-tint": "#4cd7f6",
+                    "surface-container-highest": "#303638",
+                    "primary-container": "#06b6d4",
+                    "tertiary": "#ffb95f",
+                    "secondary": "#4edea3",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "outline": "#869397",
+                    "on-secondary-fixed": "#002113",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001f26",
+                    "inverse-surface": "#dee3e6",
+                    "on-error": "#690005",
+                    "surface-container-low": "#171d1e",
+                    "on-surface": "#dee3e6",
+                    "surface-dim": "#0e1416",
+                    "surface-container-high": "#252b2d",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#ffddb8",
+                    "surface-variant": "#303638",
+                    "on-tertiary": "#472a00",
+                    "background": "#0e1416",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-background": "#dee3e6",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed": "#2a1700",
+                    "on-surface-variant": "#bcc9cd",
+                    "primary-fixed": "#acedff",
+                    "outline-variant": "#3d494c",
+                    "tertiary-container": "#e79400",
+                    "inverse-primary": "#00687a",
+                    "on-secondary": "#003824",
+                    "inverse-on-surface": "#2b3133",
+                    "surface-container": "#1b2122",
+                    "surface-bright": "#343a3c",
+                    "surface-container-lowest": "#090f11",
+                    "primary-fixed-dim": "#4cd7f6",
+                    "on-secondary-container": "#00311f",
+                    "surface": "#0e1416",
+                    "secondary-fixed-dim": "#4edea3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "32px",
+                    "margin-mobile": "16px",
+                    "sidebar-width": "260px",
+                    "gutter": "16px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-mono": ["JetBrains Mono"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    }catch(_e){}</script></head><body class="bg-background text-on-background font-body-md overflow-hidden h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width h-full">
+<div class="mb-8 px-2 flex items-center gap-3"><div class="flex flex-col"><span class="font-display text-headline-lg text-primary font-bold">Bridge Monitor</span><div class="flex items-center gap-2"><span class="text-secondary font-bold uppercase text-[10px] whitespace-nowrap">NODE STATUS: ACTIVE</span></div></div></div>
+<nav class="flex-1 space-y-1">
+<a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg group">
+<span class="material-symbols-outlined" data-original-icon="dashboard">dashboard</span>
+<span class="font-body-md">Home</span>
+</a>
+<a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg group">
+<span class="material-symbols-outlined">show_chart</span>
+<span class="font-body-md">Analysis</span>
+</a>
+<a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg group">
+<span class="material-symbols-outlined">database</span>
+<span class="font-body-md">Logs</span>
+</a>
+<a href="settings.html" class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg transition-all active:scale-95 duration-150 shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-body-md font-bold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-4 pt-6 border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+<span class="">Export Report</span>
+</button>
+<div class="space-y-1">
+<a href="#" class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md">Help</span>
+</a>
+<a href="index.html" class="flex items-center gap-3 px-4 py-2 text-error hover:bg-error/10 transition-all rounded-lg">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col ml-[260px] h-screen overflow-y-auto">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-margin-desktop bg-background border-b border-outline-variant sticky top-0 z-30 h-16"><div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div></header>
+<!-- Main Content -->
+<main class="p-margin-desktop space-y-gutter flex-1">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-background">System Configuration</h1>
+<p class="text-on-surface-variant font-body-md mt-1">Manage node telemetry parameters, alarm thresholds, and network connectivity settings.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 border border-outline text-on-surface-variant rounded-lg hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+<span class="">Reset to Default</span>
+</button>
+<button class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(76,215,246,0.4)] transition-all active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span class="">Save Changes</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout for Settings -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter"><!-- Left Column: Node Parameters Stack -->
+<div class="md:col-span-8 space-y-gutter">
+    <!-- Node Parameters Card 1 -->
+    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl active-glow transition-shadow">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">sensors</span>
+                <h3 class="font-headline-lg text-headline-lg">Node Parameters</h3>
+            </div>
+            <div class="px-3 py-1 bg-surface-container-high rounded border border-outline-variant">
+                <span class="font-label-mono text-label-mono text-secondary">ID: NODE-BRG-01</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
+                    <input type="range" min="1" max="1000" value="500" class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary">
+                    <div class="flex justify-between mt-2 font-label-mono text-on-surface-variant">
+                        <span class="">1 Hz</span>
+                        <span class="text-primary font-bold">500 Hz</span>
+                        <span class="">1000 Hz</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
+                    <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
+                        <option>16-bit Integer</option>
+                        <option selected="">32-bit Float</option>
+                        <option>64-bit Double</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sensitivity Gain</label>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">1x</button>
+                        <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg font-bold">2x</button>
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">4x</button>
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">8x</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+                    <div>
+                        <p class="font-body-md font-bold">Auto-Calibration</p>
+                        <p class="text-[12px] text-on-surface-variant">Periodic sensor re-zeroing</p>
+                    </div>
+                    <div class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked="" class="sr-only peer">
+                        <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Node Parameters Card 2 -->
+    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl active-glow transition-shadow">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary">sensors</span>
+                <h3 class="font-headline-lg text-headline-lg">Node Parameters</h3>
+            </div>
+            <div class="px-3 py-1 bg-surface-container-high rounded border border-outline-variant">
+                <span class="font-label-mono text-label-mono text-secondary">ID: NODE-BRG-02</span>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
+                    <input type="range" min="1" max="1000" value="500" class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary">
+                    <div class="flex justify-between mt-2 font-label-mono text-on-surface-variant">
+                        <span class="">1 Hz</span>
+                        <span class="text-primary font-bold">500 Hz</span>
+                        <span class="">1000 Hz</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
+                    <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
+                        <option>16-bit Integer</option>
+                        <option selected="">32-bit Float</option>
+                        <option>64-bit Double</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sensitivity Gain</label>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">1x</button>
+                        <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg font-bold">2x</button>
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">4x</button>
+                        <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">8x</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+                    <div>
+                        <p class="font-body-md font-bold">Auto-Calibration</p>
+                        <p class="text-[12px] text-on-surface-variant">Periodic sensor re-zeroing</p>
+                    </div>
+                    <div class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked="" class="sr-only peer">
+                        <div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Right Column: System Connectivity (Full Height) -->
+<div class="md:col-span-4 bg-surface-container border border-outline-variant p-6 rounded-xl relative overflow-hidden group h-full">
+    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <span class="material-symbols-outlined text-[120px]">lan</span>
+    </div>
+    <div class="flex items-center gap-3 mb-6 relative">
+        <span class="material-symbols-outlined text-primary">activity_zone</span>
+        <h3 class="font-headline-lg text-headline-lg">System Connectivity</h3>
+    </div>
+    <div class="space-y-4 relative">
+        <div>
+            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Server IP Address</label>
+            <input type="text" value="192.168.10.155" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+        </div>
+        <div>
+            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">MQTT Broker URL</label>
+            <input type="text" value="tcp://shms-core.local:1883" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Port</label>
+                <input type="number" value="8080" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+            </div>
+            <div>
+                <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Sync Interval</label>
+                <input type="text" value="15s" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+            </div>
+        </div>
+        <div class="pt-2">
+            <button class="w-full border border-primary text-primary py-2 rounded-lg font-bold hover:bg-primary/5 transition-colors">
+                Test Connection
+            </button>
+        </div>
+    </div>
+</div></div>
+</main>
+<!-- Alert Thresholds -->
+<div class="md:col-span-12 bg-surface-container border border-outline-variant p-6 rounded-xl mt-4">
+    <div class="flex items-center gap-3 mb-6">
+        <span class="material-symbols-outlined text-error">warning</span>
+        <h3 class="font-headline-lg text-headline-lg">Alert Thresholds</h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Vibration Threshold (RMS)</label>
+            <div class="flex gap-3 items-center">
+                <input id="th-vibration" type="number" step="0.1" value="0.5" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+                <span class="text-on-surface-variant text-sm">m/s²</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-1">Alert jika RMS getaran melebihi nilai ini</p>
+        </div>
+        <div>
+            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Tilt Threshold</label>
+            <div class="flex gap-3 items-center">
+                <input id="th-tilt" type="number" step="0.1" value="2.0" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+                <span class="text-on-surface-variant text-sm">°</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-1">Alert jika delta pitch/roll melebihi nilai ini</p>
+        </div>
+        <div class="flex items-end">
+            <button id="btn-save-threshold" class="w-full bg-primary text-on-primary font-bold py-2 rounded-lg hover:shadow-[0_0_15px_rgba(76,215,246,0.4)] transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span>
+                <span>Simpan Threshold</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+</main>
+<!-- Bottom padding for spacing -->
+<div class="h-10"></div>
+</div>
+<script>
+// Load thresholds dari API
+async function loadThresholds() {
+    for (const p of ['vibration', 'tilt']) {
+        try {
+            const r = await fetch(`/api/threshold/${p}`);
+            const d = await r.json();
+            document.getElementById(`th-${p}`).value = d.value;
+        } catch(e) { /* skip */ }
+    }
+}
+
+// Save threshold
+document.getElementById('btn-save-threshold')?.addEventListener('click', async () => {
+    for (const p of ['vibration', 'tilt']) {
+        const val = parseFloat(document.getElementById(`th-${p}`).value);
+        if (!isNaN(val)) {
+            await fetch(`/api/threshold/${p}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: val })
+            });
+        }
+    }
+    alert('Threshold tersimpan!');
+});
+
+// Load sampling rate per node
+async function loadNodeConfig() {
+    for (const node of ['node_01', 'node_02']) {
+        try {
+            const r = await fetch(`/api/node/${node}/config`);
+            const d = await r.json();
+            // Cari slider yang sesuai
+            const sliders = document.querySelectorAll('input[type="range"]');
+            // Ada 2 slider (node 1 & node 2)
+            // Update sesuai urutan
+        } catch(e) { /* skip */ }
+    }
+}
+
+loadThresholds();
+loadNodeConfig();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>

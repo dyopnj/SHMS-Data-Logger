@@ -1,8 +1,9 @@
 import Database from 'better-sqlite3';
+import type { Database as DatabaseType } from 'better-sqlite3';
 import config from './config';
 import type { SensorReading, FftResult, Alert } from './types';
 
-const db = new Database(config.db_path);
+const db: DatabaseType = new Database(config.db_path);
 db.pragma('journal_mode = WAL');
 
 // Auto-migrate

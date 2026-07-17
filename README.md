@@ -7,7 +7,7 @@ Gateway backend untuk sistem monitoring kesehatan jembatan.
 - **Backend**: Node.js + TypeScript + Express
 - **Database**: SQLite (better-sqlite3)
 - **MQTT Broker**: Mosquitto
-- **Frontend**: Vanilla JS + Chart.js
+- **Frontend**: Tailwind CSS + Plotly
 
 ## Arsitektur
 
@@ -32,11 +32,21 @@ npm run dev
 
 ## Deploy ke Mini PC
 
+Instruksi lengkap: [MINIPC_SETUP.md](MINIPC_SETUP.md)
+
 ```bash
-git pull
-npm install --production
+# 1. Clone di Mini PC
+git clone https://github.com/dyopnj/SHMS-Data-Logger.git
+
+# 2. Install + Build
+npm install
 npm run build
-# Jalankan Mosquitto + npm run serve
+
+# 3. Jalankan Mosquitto + Backend
+.\scripts\start-minipc.ps1
+
+# 4. Update setelah ada perubahan (dari laptop commit + push)
+.\scripts\update-minipc.ps1
 ```
 
 ## Environment Variables

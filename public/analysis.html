@@ -1,0 +1,498 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script><style id="plotly.js-style-global"></style><style id="plotly.js-style-global"></style><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#4cd7f6",
+                        "on-surface-variant": "#bcc9cd",
+                        "surface-container-highest": "#303638",
+                        "primary-container": "#06b6d4",
+                        "secondary-container": "#00a572",
+                        "surface-variant": "#303638",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "background": "#0e1416",
+                        "primary": "#4cd7f6",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#001f26",
+                        "inverse-on-surface": "#2b3133",
+                        "on-secondary-fixed-variant": "#005236",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#252b2d",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#472a00",
+                        "surface-container": "#1b2122",
+                        "primary-fixed": "#acedff",
+                        "surface-bright": "#343a3c",
+                        "secondary-fixed-dim": "#4edea3",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-container": "#00311f",
+                        "surface-container-low": "#171d1e",
+                        "on-surface": "#dee3e6",
+                        "inverse-surface": "#dee3e6",
+                        "outline-variant": "#3d494c",
+                        "on-primary-fixed-variant": "#004e5c",
+                        "inverse-primary": "#00687a",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-secondary": "#003824",
+                        "on-background": "#dee3e6",
+                        "tertiary": "#ffb95f",
+                        "primary-fixed-dim": "#4cd7f6",
+                        "on-primary": "#003640",
+                        "tertiary-container": "#e79400",
+                        "outline": "#869397",
+                        "on-tertiary-container": "#563400",
+                        "surface-container-lowest": "#090f11",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-secondary-fixed": "#002113",
+                        "on-error": "#690005",
+                        "secondary": "#4edea3",
+                        "on-primary-container": "#00424f",
+                        "surface-dim": "#0e1416",
+                        "surface": "#0e1416"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "base": "4px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-mono": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script></head><body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-on-primary">
+<!-- Top AppBar -->
+<header class="flex justify-between items-center px-margin-desktop h-16 bg-background border-b border-outline-variant fixed top-0 z-50 left-sidebar-width right-0">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary px-6 uppercase tracking-wider">SHMS - SIMON BATAPA 2026</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 mr-4 bg-surface-container-high px-3 py-1 rounded-full border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] font-bold text-primary uppercase">System Live</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-variant rounded-full transition-all" data-original-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-variant rounded-full transition-all" data-original-icon="account_circle">account_circle</button>
+</div>
+</header>
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div>
+<h2 class="font-bold text-primary text-lg">Bridge Monitor</h2>
+<p class="text-[10px] uppercase tracking-wider flex items-center gap-1 text-secondary font-bold whitespace-nowrap">NODE STATUS: ACTIVE</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-original-icon="dashboard">dashboard</span>
+<span class="">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-medium" href="#">
+<span class="material-symbols-outlined" data-original-icon="show_chart">show_chart</span>
+<span class="">Analysis</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="">Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="">Settings</span>
+</a>
+</nav>
+<button class="mt-4 w-full py-2 bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-original-icon="file_download">file_download</span>
+        Export Report
+    </button>
+<div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="">Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-error hover:bg-error-container/20 transition-all rounded-lg" href="index.html">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-sidebar-width pt-16 h-screen flex flex-col bg-surface-dim">
+<!-- Global Chart Header -->
+<div class="h-14 flex items-center justify-between px-6 bg-surface-container-low border-b border-outline-variant shrink-0">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-md text-headline-md text-on-surface">Structural Analysis Dashboard</h1>
+<span class="px-2 py-0.5 bg-primary-container/20 text-primary text-[10px] font-bold rounded border border-primary/30 uppercase tracking-widest">Multi-Sensor Feed</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-[11px] font-label-mono">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-sm bg-primary"></span>
+<span class="text-on-surface">Node 01</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-sm bg-tertiary"></span>
+<span class="text-on-surface">Node 02</span>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-highest p-1 rounded-lg">
+<button class="text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-all rounded h-8 w-8 flex items-center justify-center bg-surface-container-high" id="btn-reset-all" title="Reset All Layouts">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Grid Container -->
+<div class="flex-1 overflow-y-auto p-6">
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-6">
+<!-- Accel X -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[440px]">
+<div class="px-4 py-3 border-b border-outline-variant flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface tracking-tight">ACCELEROMETER X - RAW</span>
+<div class="flex items-center gap-1 chart-toolbar">
+<button class="material-symbols-outlined text-[18px]">photo_camera</button>
+<button class="material-symbols-outlined text-[18px]">search</button>
+<button class="material-symbols-outlined text-[18px]">open_with</button>
+<button class="material-symbols-outlined text-[18px]">add</button>
+<button class="material-symbols-outlined text-[18px]">remove</button>
+<button class="material-symbols-outlined text-[18px]">fullscreen</button>
+<button class="material-symbols-outlined text-[18px]">home</button>
+</div>
+</div>
+</div>
+<div class="flex-1 relative" id="plot-accel-x"></div>
+<div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Mean</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-x-mean">0.00</span>
+</div>
+<div class="flex flex-col border-x border-outline-variant/30">
+<span class="text-[10px] text-outline uppercase font-bold">Median</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-x-median">0.00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Peak</span>
+<div class="flex justify-center gap-2 text-xs font-label-mono">
+<span class="text-primary" id="stat-accel-x-peak-n1">0.00</span>
+<span class="text-outline">/</span>
+<span class="text-tertiary" id="stat-accel-x-peak-n2">0.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Accel Y -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[440px]">
+<div class="px-4 py-3 border-b border-outline-variant flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface tracking-tight">ACCELEROMETER Y - RAW</span>
+<div class="flex items-center gap-1 chart-toolbar">
+<button class="material-symbols-outlined text-[18px]">photo_camera</button>
+<button class="material-symbols-outlined text-[18px]">search</button>
+<button class="material-symbols-outlined text-[18px]">open_with</button>
+<button class="material-symbols-outlined text-[18px]">add</button>
+<button class="material-symbols-outlined text-[18px]">remove</button>
+<button class="material-symbols-outlined text-[18px]">fullscreen</button>
+<button class="material-symbols-outlined text-[18px]">home</button>
+</div>
+</div>
+</div>
+<div class="flex-1 relative" id="plot-accel-y"></div>
+<div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Mean</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-y-mean">0.00</span>
+</div>
+<div class="flex flex-col border-x border-outline-variant/30">
+<span class="text-[10px] text-outline uppercase font-bold">Median</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-y-median">0.00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Peak</span>
+<div class="flex justify-center gap-2 text-xs font-label-mono">
+<span class="text-primary" id="stat-accel-y-peak-n1">0.00</span>
+<span class="text-outline">/</span>
+<span class="text-tertiary" id="stat-accel-y-peak-n2">0.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Accel Z -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[440px]">
+<div class="px-4 py-3 border-b border-outline-variant flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface tracking-tight">ACCELEROMETER Z - RAW</span>
+<div class="flex items-center gap-1 chart-toolbar">
+<button class="material-symbols-outlined text-[18px]">photo_camera</button>
+<button class="material-symbols-outlined text-[18px]">search</button>
+<button class="material-symbols-outlined text-[18px]">open_with</button>
+<button class="material-symbols-outlined text-[18px]">add</button>
+<button class="material-symbols-outlined text-[18px]">remove</button>
+<button class="material-symbols-outlined text-[18px]">fullscreen</button>
+<button class="material-symbols-outlined text-[18px]">home</button>
+</div>
+</div>
+</div>
+<div class="flex-1 relative" id="plot-accel-z"></div>
+<div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Mean</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-z-mean">0.00</span>
+</div>
+<div class="flex flex-col border-x border-outline-variant/30">
+<span class="text-[10px] text-outline uppercase font-bold">Median</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-accel-z-median">0.00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Peak</span>
+<div class="flex justify-center gap-2 text-xs font-label-mono">
+<span class="text-primary" id="stat-accel-z-peak-n1">0.00</span>
+<span class="text-outline">/</span>
+<span class="text-tertiary" id="stat-accel-z-peak-n2">0.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Gyro X -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[440px]">
+<div class="px-4 py-3 border-b border-outline-variant flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface tracking-tight">GYROSCOPE X - VELOCITY</span>
+<div class="flex items-center gap-1 chart-toolbar">
+<button class="material-symbols-outlined text-[18px]">photo_camera</button>
+<button class="material-symbols-outlined text-[18px]">search</button>
+<button class="material-symbols-outlined text-[18px]">open_with</button>
+<button class="material-symbols-outlined text-[18px]">add</button>
+<button class="material-symbols-outlined text-[18px]">remove</button>
+<button class="material-symbols-outlined text-[18px]">fullscreen</button>
+<button class="material-symbols-outlined text-[18px]">home</button>
+</div>
+</div>
+</div>
+<div class="flex-1 relative" id="plot-gyro-x"></div>
+<div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Mean</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-gyro-x-mean">0.00</span>
+</div>
+<div class="flex flex-col border-x border-outline-variant/30">
+<span class="text-[10px] text-outline uppercase font-bold">Median</span>
+<span class="text-on-surface font-label-mono text-xs" id="stat-gyro-x-median">0.00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold">Peak</span>
+<div class="flex justify-center gap-2 text-xs font-label-mono">
+<span class="text-primary" id="stat-gyro-x-peak-n1">0.00</span>
+<span class="text-outline">/</span>
+<span class="text-tertiary" id="stat-gyro-x-peak-n2">0.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Global Footer Controls -->
+<div class="h-12 flex items-center justify-between bg-surface-container-low border-t border-outline-variant px-6 shrink-0">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-outline font-bold uppercase">Time Range:</span>
+<div class="flex gap-1">
+<button class="px-3 py-1 text-[11px] rounded bg-primary text-on-primary font-bold">1H</button>
+<button class="px-3 py-1 text-[11px] rounded text-on-surface-variant hover:bg-surface-variant">6H</button>
+<button class="px-3 py-1 text-[11px] rounded text-on-surface-variant hover:bg-surface-variant">1D</button>
+<button class="px-3 py-1 text-[11px] rounded text-on-surface-variant hover:bg-surface-variant">7D</button>
+</div>
+</div>
+<div class="w-[1px] h-4 bg-outline-variant"></div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-outline font-bold uppercase">Refresh Rate:</span>
+<select class="bg-surface-container-high border-none text-[11px] rounded py-1 px-2 focus:ring-0 text-on-surface">
+<option>Real-time (2s)</option>
+<option>5s</option>
+<option>30s</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-2 text-[10px] text-outline uppercase font-bold">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+<span class="">Last Sync: Just Now</span>
+</div>
+</div>
+</main>
+<script>
+    const plotIds = ['plot-accel-x', 'plot-accel-y', 'plot-accel-z', 'plot-gyro-x'];
+    const variables = ['accel-x', 'accel-y', 'accel-z', 'gyro-x'];
+    const yLabels = ['Acceleration (m/s²)', 'Acceleration (m/s²)', 'Acceleration (m/s²)', 'Velocity (rad/s)'];
+    
+    // Store peak values
+    const peaks = {
+        'accel-x': { n1: 0, n2: 0 },
+        'accel-y': { n1: 0, n2: 0 },
+        'accel-z': { n1: 0, n2: 0 },
+        'gyro-x': { n1: 0, n2: 0 }
+    };
+
+    function generateInitialData(points, index) {
+        const now = new Date();
+        const x = [];
+        const n1 = [];
+        const n2 = [];
+
+        for (let i = 0; i < points; i++) {
+            const date = new Date(now.getTime() - (points - i) * 2000);
+            x.push(date);
+            const base = index < 3 ? 0.3 : 15;
+            n1.push(base * Math.sin(i / (12 + index)) + (Math.random() - 0.5) * (base/3));
+            n2.push(base * Math.cos(i / (15 - index)) + (Math.random() - 0.5) * (base/2.5));
+        }
+        return { x, n1, n2 };
+    }
+
+    const getLayout = (yLabel) => ({
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        margin: { t: 30, r: 20, b: 60, l: 70 },
+        showlegend: false,
+        xaxis: {
+            gridcolor: '#1b2122',
+            tickfont: { color: '#869397', family: 'JetBrains Mono', size: 9 },
+            linecolor: '#3d494c',
+            autorange: true,
+            type: 'date',
+            title: { 
+                text: 'Time', 
+                font: { size: 11, color: '#869397', family: 'Inter', weight: 600 }, 
+                standoff: 20 
+            },
+            // Enable dynamic datetime scaling
+            tickformatstops: [
+                { dtickrange: [null, 1000], value: '%H:%M:%S.%L' },
+                { dtickrange: [1000, 60000], value: '%H:%M:%S' },
+                { dtickrange: [60000, 3600000], value: '%H:%M' },
+                { dtickrange: [3600000, 86400000], value: '%H:%M\n%b %e' },
+                { dtickrange: [86400000, 604800000], value: '%e %b' },
+                { dtickrange: [604800000, "M1"], value: '%e %b' },
+                { dtickrange: ["M1", "M12"], value: '%b %Y' },
+                { dtickrange: ["M12", null], value: '%Y' }
+            ]
+        },
+        yaxis: {
+            gridcolor: '#1b2122',
+            tickfont: { color: '#869397', family: 'JetBrains Mono', size: 9 },
+            linecolor: '#3d494c',
+            zerolinecolor: '#3d494c',
+            title: { 
+                text: yLabel, 
+                font: { size: 11, color: '#869397', family: 'Inter', weight: 600 }, 
+                standoff: 15 
+            }
+        },
+        hovermode: 'x unified',
+        hoverlabel: { bgcolor: '#171d1e', bordercolor: '#3d494c', font: { color: '#dee3e6', size: 10 } }
+    });
+
+    const config = { responsive: true, displayModeBar: false };
+
+    plotIds.forEach((id, index) => {
+        const initial = generateInitialData(60, index);
+        const data = [
+            {
+                x: initial.x,
+                y: initial.n1,
+                name: 'Node 01',
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: '#4cd7f6', width: 2, shape: 'spline' },
+            },
+            {
+                x: initial.x,
+                y: initial.n2,
+                name: 'Node 02',
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: '#ffb95f', width: 2, shape: 'spline' },
+            }
+        ];
+        Plotly.newPlot(id, data, getLayout(yLabels[index]), config);
+    });
+
+    // Real-time Update
+    setInterval(() => {
+        const time = new Date();
+        plotIds.forEach((id, index) => {
+            const varKey = variables[index];
+            const base = index < 3 ? 0.3 : 15;
+            
+            const newVal1 = base * Math.sin(time.getTime() / 2500) + (Math.random() - 0.5) * (base/4);
+            const newVal2 = base * Math.cos(time.getTime() / 3000) + (Math.random() - 0.5) * (base/3);
+            
+            Plotly.extendTraces(id, {
+                y: [[newVal1], [newVal2]],
+                x: [[time], [time]]
+            }, [0, 1]);
+
+            // Update Peaks
+            if(Math.abs(newVal1) > peaks[varKey].n1) peaks[varKey].n1 = Math.abs(newVal1);
+            if(Math.abs(newVal2) > peaks[varKey].n2) peaks[varKey].n2 = Math.abs(newVal2);
+
+            // Update Stats Display
+            const meanEl = document.getElementById(`stat-${varKey}-mean`);
+            const medianEl = document.getElementById(`stat-${varKey}-median`);
+            const peak1El = document.getElementById(`stat-${varKey}-peak-n1`);
+            const peak2El = document.getElementById(`stat-${varKey}-peak-n2`);
+
+            if(meanEl) meanEl.innerText = ((newVal1 + newVal2)/2).toFixed(2);
+            if(medianEl) medianEl.innerText = (Math.max(newVal1, newVal2)/1.2).toFixed(2);
+            if(peak1El) peak1El.innerText = peaks[varKey].n1.toFixed(2);
+            if(peak2El) peak2El.innerText = peaks[varKey].n2.toFixed(2);
+
+            const el = document.getElementById(id);
+            // Sliding window only if not zoomed manually (autorange check)
+            if (el.layout.xaxis.autorange && el.data[0].x.length > 100) {
+                Plotly.relayout(id, {
+                    'xaxis.range': [
+                        el.data[0].x[el.data[0].x.length - 100],
+                        el.data[0].x[el.data[0].x.length - 1]
+                    ]
+                });
+            }
+        });
+    }, 2000);
+
+    document.getElementById('btn-reset-all').addEventListener('click', () => {
+        plotIds.forEach((id, index) => {
+            Plotly.relayout(id, {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+        });
+    });
+</script></body></html>

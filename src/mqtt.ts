@@ -41,7 +41,15 @@ export function publish(topic: string, data: unknown) {
 }
 
 function handleProcessedData(data: ProcessedData) {
-  saveReading(data);
+  saveReading({
+    node_id: data.node_id, timestamp: data.timestamp,
+    rms: data.vibration.rms,
+    pitch: data.tilt.pitch, roll: data.tilt.roll,
+    pitch_delta: data.tilt.pitch_delta, roll_delta: data.tilt.roll_delta,
+    pitch_baseline: 0, roll_baseline: 0,
+    mag_x: data.magnetometer.mag_x, mag_y: data.magnetometer.mag_y, mag_z: data.magnetometer.mag_z,
+    connection_status: data.connection_status,
+  });
   onData?.(data);
 
   // Cek threshold alert

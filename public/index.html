@@ -1,48 +1,111 @@
 <!DOCTYPE html>
-<html lang="id">
+<html class="dark" lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bridge SHMS - Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SHMS - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body {
+            background: #0e1416;
+            font-family: 'Inter', sans-serif;
+        }
+        .login-card {
+            background: #171d1e;
+            border: 1px solid #3d494c;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        .login-card h1 {
+            color: #4cd7f6;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+        .login-card .sub {
+            color: #869397;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .login-card input {
+            background: #0e1416;
+            border: 1px solid #3d494c;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            color: #dee3e6;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+        .login-card input:focus {
+            outline: none;
+            border-color: #4cd7f6;
+            box-shadow: 0 0 0 2px rgba(76,215,246,0.3);
+        }
+        .login-card button {
+            background: #4cd7f6;
+            color: #003640;
+            font-weight: 700;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .login-card button:hover {
+            opacity: 0.85;
+            transform: scale(1.02);
+        }
+        .login-card .signup {
+            color: #869397;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .login-card .signup a {
+            color: #4cd7f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
-<header>
-  <h1>🏗️ Bridge Structural Health Monitoring</h1>
-  <span id="status-indicator" class="status-dot green"></span>
-  <span id="status-text">Connected</span>
-</header>
-
-<main>
-  <!-- Node Status -->
-  <section class="cards" id="node-cards"></section>
-
-  <!-- Charts -->
-  <section class="charts">
-    <div class="chart-box"><h3>RMS Getaran</h3><canvas id="chart-rms"></canvas></div>
-    <div class="chart-box"><h3>Tilt Delta (Pitch)</h3><canvas id="chart-pitch"></canvas></div>
-  </section>
-
-  <!-- FFT & Alerts -->
-  <section class="bottom-panel">
-    <div class="panel">
-      <h3>Dominant Frequency</h3>
-      <div id="fft-display"></div>
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="login-card">
+            <h1 class="text-center">SHMS</h1>
+            <div class="sub text-center">SIMON BATAPA 2026</div>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Username" value="admin" />
+                <input type="password" id="password" placeholder="Password" value="admin123" />
+                <button type="submit">Masuk ke Dashboard</button>
+            </form>
+            <div class="signup">
+                Belum punya akun? <a href="#">Daftar</a>
+            </div>
+        </div>
     </div>
-    <div class="panel">
-      <h3>Alert Log</h3>
-      <div id="alert-list"></div>
-      <button onclick="exportAlerts()">⬇ Export CSV</button>
-    </div>
-    <div class="panel">
-      <h3>Konfigurasi</h3>
-      <label>Threshold Getaran: <input type="number" id="th-vib" step="0.1" onchange="updateThreshold('vibration')"></label>
-      <label>Threshold Tilt (°): <input type="number" id="th-tilt" step="0.1" onchange="updateThreshold('tilt')"></label>
-    </div>
-  </section>
-</main>
 
-<script src="app.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validasi sederhana (hardcoded)
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if (user === 'admin' && pass === 'admin123') {
+                window.location.href = 'home.html';
+            } else {
+                alert('Username atau password salah! (gunakan admin/admin123)');
+            }
+        });
+    </script>
 </body>
 </html>
