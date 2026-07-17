@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="bg-background text-on-background antialiased flex">
-
-<!-- Sidebar -->
 <aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
 <div class="mb-8 px-2">
   <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
@@ -27,8 +25,6 @@
   <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-lg"><span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span></a>
 </div>
 </aside>
-
-<!-- Main -->
 <main class="ml-[260px] flex-1 min-h-screen">
 <header class="sticky top-0 z-30 flex justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant">
   <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
@@ -40,7 +36,7 @@
 
 <div class="p-margin-desktop space-y-gutter">
 
-<!-- Node Status Bar -->
+<!-- ─── Node Status ─── -->
 <div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex flex-wrap items-center justify-between">
   <div class="flex items-center gap-6 flex-wrap">
     <div class="flex items-center gap-2">
@@ -70,105 +66,139 @@
   </div>
   <div class="flex gap-2">
     <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant">UPTIME: 142H 22M</span>
-    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary">SAMP: 100HZ</span>
+    <span class="bg-surface-container-highest px-3 py-1 rounded text-label-mono font-label-mono border border-outline-variant text-primary">SAMP: 200HZ</span>
   </div>
 </div>
 
-<!-- Sensor Cards -->
+<!-- ─── TOP ROW: RMS + Orientation + FFT ─── -->
+<div class="grid grid-cols-12 gap-gutter">
+
+<!-- RMS Getaran -->
+<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">sensors</span> Vibration RMS</h3>
+  </div>
+  <div class="p-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="text-center">
+        <span class="value-label">Node 01</span>
+        <div class="value-rms text-primary">0.083</div>
+      </div>
+      <div class="text-center border-l border-outline-variant">
+        <span class="value-label">Node 02</span>
+        <div class="value-rms text-tertiary">0.091</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Orientation / Tilt -->
+<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">view_in_ar</span> Tilt</h3>
+  </div>
+  <div class="p-4 space-y-3">
+    <div class="flex justify-between items-center">
+      <span class="font-label-mono text-label-mono text-on-surface-variant">Roll</span>
+      <span class="font-label-mono text-primary font-bold">0.12°</span>
+      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.02°</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="font-label-mono text-label-mono text-on-surface-variant">Pitch</span>
+      <span class="font-label-mono text-secondary font-bold">-0.45°</span>
+      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.05°</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="font-label-mono text-label-mono text-on-surface-variant">Roll</span>
+      <span class="font-label-mono text-tertiary font-bold">0.14°</span>
+      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.03°</span>
+    </div>
+    <div class="flex justify-between items-center">
+      <span class="font-label-mono text-label-mono text-on-surface-variant">Pitch</span>
+      <span class="font-label-mono text-primary font-bold">-0.42°</span>
+      <span class="font-label-mono text-on-surface-variant text-[10px]">Δ 0.04°</span>
+    </div>
+    <div class="text-[10px] text-on-surface-variant text-right font-label-mono">Node 01 · Node 02</div>
+  </div>
+</div>
+
+<!-- FFT Analysis -->
+<div class="col-span-12 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
+  <div class="p-4 border-b border-outline-variant bg-surface-container-high">
+    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">frequency</span> Dominant Freq</h3>
+  </div>
+  <div class="p-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="text-center">
+        <span class="value-label">Node 01</span>
+        <div class="value-rms text-primary">5.21</div>
+        <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+      </div>
+      <div class="text-center border-l border-outline-variant">
+        <span class="value-label">Node 02</span>
+        <div class="value-rms text-tertiary">4.87</div>
+        <span class="font-label-mono text-on-surface-variant text-[10px]">Hz</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /top row -->
+
+<!-- ─── RAW DATA (dibawah, tidak menonjol) ─── -->
+<div class="opacity-50 hover:opacity-100 transition-opacity duration-300">
+<div class="flex items-center gap-2 mb-2 px-1">
+  <span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_down</span>
+  <span class="font-label-mono text-[10px] text-on-surface-variant uppercase tracking-widest">Raw Sensor Data</span>
+  <div class="flex-1 h-px bg-outline-variant"></div>
+</div>
+
 <div class="grid grid-cols-12 gap-gutter">
 
 <!-- Accelerometer -->
 <div class="col-span-12 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
-  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">speed</span> Accelerometer</h3>
-    <span class="font-label-mono text-label-mono text-on-surface-variant">m/s²</span>
+  <div class="p-3 border-b border-outline-variant bg-surface-container-high">
+    <h3 class="font-headline-md text-[14px] flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">speed</span> Accelerometer</h3>
   </div>
-  <div class="p-4 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
-    <div class="space-y-3">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">NODE 01</span>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">X</span><span class="font-label-mono text-primary font-bold text-body-lg">-0.014</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Y</span><span class="font-label-mono text-secondary font-bold text-body-lg">-0.043</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Z</span><span class="font-label-mono text-tertiary font-bold text-body-lg">9.844</span></div>
+  <div class="p-3 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
+    <div>
+      <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 01</span>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">-0.014</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.043</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">9.844</span></div>
     </div>
-    <div class="pl-4 space-y-3">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">NODE 02</span>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">X</span><span class="font-label-mono text-primary font-bold text-body-lg">-0.107</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Y</span><span class="font-label-mono text-secondary font-bold text-body-lg">-0.006</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Z</span><span class="font-label-mono text-tertiary font-bold text-body-lg">9.791</span></div>
+    <div class="pl-4">
+      <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 02</span>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">-0.107</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.006</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">9.791</span></div>
     </div>
   </div>
 </div>
 
 <!-- Gyroscope -->
 <div class="col-span-12 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
-  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">rotate_right</span> Gyroscope</h3>
-    <span class="font-label-mono text-label-mono text-on-surface-variant">rad/s</span>
+  <div class="p-3 border-b border-outline-variant bg-surface-container-high">
+    <h3 class="font-headline-md text-[14px] flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">rotate_right</span> Gyroscope</h3>
   </div>
-  <div class="p-4 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
-    <div class="space-y-3">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">NODE 01</span>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">X</span><span class="font-label-mono text-primary font-bold text-body-lg">0.034</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Y</span><span class="font-label-mono text-secondary font-bold text-body-lg">-0.079</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Z</span><span class="font-label-mono text-tertiary font-bold text-body-lg">-0.069</span></div>
+  <div class="p-3 grid grid-cols-2 gap-4 divide-x divide-outline-variant">
+    <div>
+      <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 01</span>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">0.034</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.079</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">-0.069</span></div>
     </div>
-    <div class="pl-4 space-y-3">
-      <span class="font-label-mono text-label-mono text-on-surface-variant">NODE 02</span>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">X</span><span class="font-label-mono text-primary font-bold text-body-lg">0.070</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Y</span><span class="font-label-mono text-secondary font-bold text-body-lg">-0.078</span></div>
-      <div class="flex justify-between items-center"><span class="text-label-mono text-on-surface-variant">Z</span><span class="font-label-mono text-tertiary font-bold text-body-lg">0.133</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- Orientation -->
-<div class="col-span-12 bg-surface-container border border-outline-variant rounded-xl overflow-hidden">
-  <div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-high">
-    <h3 class="font-headline-md flex items-center gap-2"><span class="material-symbols-outlined text-primary">view_in_ar</span> Orientation Analysis</h3>
-    <div class="flex gap-4">
-      <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-primary"></div><span class="text-label-mono">Node 01</span></span>
-      <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-secondary"></div><span class="text-label-mono">Node 02</span></span>
-    </div>
-  </div>
-  <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- Roll -->
-    <div class="space-y-4">
-      <div class="flex justify-between items-end">
-        <div>
-          <span class="font-label-mono text-label-mono text-on-surface-variant uppercase">Roll Angle</span>
-          <div class="text-display font-display text-primary">0.12°</div>
-        </div>
-        <div class="text-right">
-          <span class="font-label-mono text-label-mono text-on-surface-variant">Δ DIFF</span>
-          <div class="text-headline-md font-headline-md text-secondary">0.02°</div>
-        </div>
-      </div>
-      <div class="space-y-2">
-        <div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden"><div class="bg-primary h-full" style="width:45%"></div></div>
-        <div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full" style="width:47%"></div></div>
-      </div>
-    </div>
-    <!-- Pitch -->
-    <div class="space-y-4">
-      <div class="flex justify-between items-end">
-        <div>
-          <span class="font-label-mono text-label-mono text-on-surface-variant uppercase">Pitch Angle</span>
-          <div class="text-display font-display text-primary">-0.45°</div>
-        </div>
-        <div class="text-right">
-          <span class="font-label-mono text-label-mono text-on-surface-variant">Δ DIFF</span>
-          <div class="text-headline-md font-headline-md text-tertiary">0.05°</div>
-        </div>
-      </div>
-      <div class="space-y-2">
-        <div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden"><div class="bg-primary h-full" style="width:60%"></div></div>
-        <div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden"><div class="bg-secondary h-full" style="width:65%"></div></div>
-      </div>
+    <div class="pl-4">
+      <span class="font-label-mono text-[10px] text-on-surface-variant">NODE 02</span>
+      <div class="flex justify-between text-xs font-label-mono mt-1"><span class="text-on-surface-variant">X</span><span class="text-primary">0.070</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Y</span><span class="text-secondary">-0.078</span></div>
+      <div class="flex justify-between text-xs font-label-mono"><span class="text-on-surface-variant">Z</span><span class="text-tertiary">0.133</span></div>
     </div>
   </div>
 </div>
 
-</div><!-- /cards -->
+</div><!-- /raw grid -->
+</div><!-- /raw section -->
 
 </div><!-- /content -->
 
@@ -176,7 +206,6 @@
   <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
 </footer>
 </main>
-
 <script src="assets/js/app.js"></script>
 </body>
 </html>
