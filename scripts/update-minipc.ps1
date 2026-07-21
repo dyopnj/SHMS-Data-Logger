@@ -135,6 +135,25 @@ if ($pm2Ok) {
     Log "    npm run serve"
 }
 
+# Cek IP Mini PC (biar bisa diisi di ESP32)
+Log ""
+Log "[INFO] IP Address Mini PC:"
+$netAdapters = Get-NetIPAddress -AddressFamily IPv4 | Where-Object {
+    $_.InterfaceAlias -notlike '*Loopback*' -and
+    $_.InterfaceAlias -notlike '*Virtual*' -and
+    $_.InterfaceAlias -notlike '*Bluetooth*' -and
+    $_.PrefixOrigin -ne 'WellKnown'
+}
+foreach ($adapter in $netAdapters) {
+    $name = $adapter.InterfaceAlias
+    $ip = $adapter.IPAddress
+    Log "  $name : $ip"
+    Write-Host "  $name : " -NoNewline -ForegroundColor Cyan
+    Write-Host "$ip" -ForegroundColor Yellow
+}
+Write-Host ""
+Write-Host "  Catatan: isi IP di atas ke WiFi Manager ESP32 sebagai MQTT Broker" -ForegroundColor Gray
+
 # Info dashboard
 Log ""
 Log "============================================"
