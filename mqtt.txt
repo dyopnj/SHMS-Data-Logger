@@ -1,0 +1,85 @@
+============================================================================
+MQTT — Bridge Health Monitoring System
+Dokumentasi topik & payload sinkron dengan backend & firmware aktual.
+============================================================================
+Backend : src/mqtt.ts, src/config.ts, src/types.ts
+Firmware : firmware_shm/src/config/mqtt_config.h
+          firmware_shm/src/utils/payload_builder.cpp
+============================================================================
+
+── Broker ─────────────────────────────────────────────────────────────
+Default  : mqtt://localhost:1883
+Env      : MQTT_BROKER, HTTP_PORT, DB_PATH, NODE_IDS (comma-separated)
+Firmware : IP dari WiFiManager runtime, port 1883
+Auth     : shm_node / changeme (firmware)
+Client ID: NODE_ID (firmware = SHM_001)
+
+── Topik ──────────────────────────────────────────────────────────────
+Prefix  : bridge/{NODE_ID}/...
+Contoh  : bridge/SHM_001/data
+
+PUBLISH (Node → Backend):
+  bridge/{id}/data       — {rms, pitch, roll, delta, mag} tiap 1s
+  bridge/{id}/raw        — {raw_accel[256]} tiap 10-30s
+  bridge/{id}/status     — {uptime, heap, rssi, sd, mqtt, drop_rate}
+  bridge/{id}/lwt        — online/offline
+
+SUBSCRIBE (Backend → Node):
+  bridge/{id}/cmd/sampling_rate       — set sampling rate (50-200 Hz)
+  bridge/{id}/cmd/publish_interval    — set publish interval (500-10000 ms)
+  bridge/{id}/cmd/raw_window_interval — set FFT interval (10-30s)
+  bridge/{id}/cmd/recalibrate         — recalibrate gyro baseline
+  bridge/{id}/cmd/restart             — restart node
+  bridge/{id}/cmd/request_status      — minta status node
+  bridge/{id}/cmd/#                   — wildcard subscribe (firmware)
+
+── Payload Format ─────────────────────────────────────────────────────
+
+--- bridge/{id}/data (ProcessedData) ---
+{
+  "node_id": "SHM_001",
+  "timestamp": "12:34:56.789",
+  "sampling_rate_hz": 200,
+  "connection_status": "online",
+  "vibration": { "rms": 0.1234 },
+  "tilt": {
+    "pitch": 1.23, "roll": -0.45,
+    "pitch_delta": 0.01, "roll_delta": 0.02
+  },
+  "magnetometer": { "mag_x": 0, "mag_y": 0, "mag_z": 0 }
+}
+
+--- bridge/{id}/raw (RawWindow) ---
+{
+  "node_id": "SHM_001",
+  "timestamp": "12:34:56.789",
+  "window_size": 256,
+  "sampling_rate_hz": 200,
+  "raw_accel": [0.1234, 0.2345, ...]
+}
+
+--- bridge/{id}/status ---
+{
+  "node_id": "SHM_001",
+  "uptime_s": 12345,
+  "free_heap": 123456,
+  "wifi_rssi": -65,
+  "sd_ok": true,
+  "mqtt_ok": true,
+  "drop_rate_pct": 0.05
+}
+
+── Backend Processing ─────────────────────────────────────────────────
+1. Data & raw masuk via MQTT
+2. Parsing JSON sesuai tipe topik (/data → ProcessedData, /raw → RawWindow)
+3. Simpan ke SQLite (readings, fft_results)
+4. Cek threshold → simpan alert jika over
+5. Broadcast ke WebSocket clients (dashboard real-time)
+6. API REST: /api/readings/:nodeId, /api/alerts, /api/threshold/:param
+
+── DB Tables ──────────────────────────────────────────────────────────
+readings     — rms, pitch, roll, mag, connection_status
+fft_results  — dominant_freq, window_size, sampling_rate
+alerts       — threshold violations (vibration / tilt)
+thresholds   — vibration=0.5, tilt=2.0
+node_config  — sampling_rate per node (default 200)
