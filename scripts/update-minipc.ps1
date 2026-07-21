@@ -103,19 +103,46 @@ Pop-Location
 Log ""
 Log "--- START SERVICE ---"
 
-# Start Mosquitto
+# Start Mosquitto — coba service dulu, fallback start manual
 if ($mqttSvc) {
-    if ($mqttSvc.Status -ne 'Running') {
+    if ($mqttSvc.Status -eq 'Running') {
+        Log "  Mosquitto: sudah running"
+    } else {
         try {
             Start-Service mosquitto -ErrorAction Stop
-            Log "  Mosquitto: di-start"
+            Log "  Mosquitto: di-start (service)"
         } catch {
-            Log "  Gagal start service Mosquitto (butuh Admin)."
-            Log "  Jalankan PowerShell sebagai Administrator, lalu: Start-Service mosquitto"
-            Log "  Atau start manual: & 'C:\Program Files\Mosquitto\mosquitto.exe' -v"
+            Log "  Gagal start service (butuh Admin), fallback ke manual..."
+            $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
+            $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
+            if (Test-Path $mosqExe) {
+                $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
+                if (-not $p) {
+                    $arg = if (Test-Path $mosqConf) { "-c `"$mosqConf`" -v" } else { "-v" }
+                    Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
+                    Log "  Mosquitto: start manual (process)"
+                } else {
+                    Log "  Mosquitto: sudah jalan (process)"
+                }
+            } else {
+                Log "  Mosquitto: LEWAT — exe gak ditemukan"
+            }
+        }
+    }
+} else {
+    $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
+    $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
+    if (Test-Path $mosqExe) {
+        $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
+        if (-not $p) {
+            $arg = if (Test-Path $mosqConf) { "-c `"$mosqConf`" -v" } else { "-v" }
+            Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
+            Log "  Mosquitto: start manual (process)"
+        } else {
+            Log "  Mosquitto: sudah jalan (process)"
         }
     } else {
-        Log "  Mosquitto: sudah running"
+        Log "  Mosquitto: LEWAT — gak terinstall"
     }
 }
 
