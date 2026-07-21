@@ -115,32 +115,31 @@ if ($mqttSvc) {
             Log "  Gagal start service (butuh Admin), fallback ke manual..."
             $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
             $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-            if (Test-Path $mosqExe) {
-                $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
-                if (-not $p) {
-                    $arg = if (Test-Path $mosqConf) { "-c `"$mosqConf`" -v" } else { "-v" }
-                    Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
-                    Log "  Mosquitto: start manual (process)"
+            if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
+                if (Test-Path $mosqConf) {
+                    Start-Process $mosqExe -ArgumentList '-c', "$mosqConf", '-v' -WindowStyle Hidden
                 } else {
-                    Log "  Mosquitto: sudah jalan (process)"
+                    Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
                 }
+                Start-Sleep -Milliseconds 500
+                Log "  Mosquitto: start manual (process)"
             } else {
-                Log "  Mosquitto: LEWAT — exe gak ditemukan"
+                Log "  Mosquitto: sudah jalan atau exe gak ditemukan"
             }
         }
     }
 } else {
     $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
     $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-    if (Test-Path $mosqExe) {
-        $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
-        if (-not $p) {
-            $arg = if (Test-Path $mosqConf) { "-c `"$mosqConf`" -v" } else { "-v" }
-            Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
-            Log "  Mosquitto: start manual (process)"
+    if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
+        if (Test-Path $mosqConf) {
+            Start-Process $mosqExe -ArgumentList '-c', "$mosqConf", '-v' -WindowStyle Hidden
         } else {
-            Log "  Mosquitto: sudah jalan (process)"
+            Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
         }
+        Start-Sleep -Milliseconds 500
+        Log "  Mosquitto: start manual (process)"
+    } else {
     } else {
         Log "  Mosquitto: LEWAT — gak terinstall"
     }

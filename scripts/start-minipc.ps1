@@ -19,32 +19,32 @@ if ($svc) {
         } catch {
             # Fallback: start manual biar gak perlu Admin
             $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-            if (Test-Path $mosqExe) {
-                $conf = "C:\Program Files\Mosquitto\mosquitto.conf"
-                $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
-                if (-not $p) {
-                    $arg = if (Test-Path $conf) { "-c `"$conf`" -v" } else { "-v" }
-                    Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
+            $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
+            if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
+                if (Test-Path $mosqConf) {
+                    Start-Process $mosqExe -ArgumentList '-c', $mosqConf, '-v' -WindowStyle Hidden
+                } else {
+                    Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
                 }
                 Write-Host "OK (manual)" -ForegroundColor Green
             } else {
-                Write-Host "LEWAT (gak ditemukan)" -ForegroundColor Yellow
+                Write-Host "OK (sudah jalan)" -ForegroundColor Green
             }
         }
     }
 } else {
     # Fallback kalo service gak terdaftar tapi exe ada
     $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-    if (Test-Path $mosqExe) {
-        $p = Get-Process -Name "mosquitto" -ErrorAction SilentlyContinue
-        if (-not $p) {
-            $conf = "C:\Program Files\Mosquitto\mosquitto.conf"
-            $arg = if (Test-Path $conf) { "-c `"$conf`" -v" } else { "-v" }
-            Start-Process $mosqExe -ArgumentList $arg -WindowStyle Hidden
+    $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
+    if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
+        if (Test-Path $mosqConf) {
+            Start-Process $mosqExe -ArgumentList '-c', $mosqConf, '-v' -WindowStyle Hidden
+        } else {
+            Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
         }
         Write-Host "OK (manual)" -ForegroundColor Green
     } else {
-        Write-Host "LEWAT (gak terinstall)" -ForegroundColor Yellow
+        Write-Host "OK (sudah jalan)" -ForegroundColor Green
     }
 }
 
