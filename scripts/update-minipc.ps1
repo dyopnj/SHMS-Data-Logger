@@ -2,7 +2,7 @@
 # Setup pertama / update project di Mini PC Lenovo
 # Jalanin: PowerShell → kanan "Run with PowerShell"
 
-$root = "D:\bridge-monitoring"
+$root = "C:\SHMS-Data-Logger"
 $repoUrl = "https://github.com/dyopnj/SHMS-Data-Logger.git"
 $logFile = "$root\setup.log"
 $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"

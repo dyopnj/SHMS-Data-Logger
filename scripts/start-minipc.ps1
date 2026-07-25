@@ -2,7 +2,7 @@
 # Start harian: Mosquitto + Backend + Dashboard
 # Jalanin tiap mau pake sistem
 
-$root = "D:\bridge-monitoring"
+$root = "C:\SHMS-Data-Logger"
 $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
 Write-Host "=== START BRIDGE SHMS ===" -ForegroundColor Cyan
