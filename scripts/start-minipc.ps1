@@ -1,68 +1,42 @@
 # start-minipc.ps1
-# Start semua service: Mosquitto + Backend + Buka Dashboard
-# Jalanin tiap mau pake sistem (setelah setup pertama via update-minipc.ps1)
+# Start harian: Mosquitto + Backend + Dashboard
+# Jalanin tiap mau pake sistem
 
-$root = Split-Path -Parent $PSScriptRoot
+$root = "D:\bridge-monitoring"
+$ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
 Write-Host "=== START BRIDGE SHMS ===" -ForegroundColor Cyan
 
-# 1. Mosquitto — coba service dulu, fallback start manual
+# 1. Mosquitto
 Write-Host "[1/3] Mosquitto... " -NoNewline
 $svc = Get-Service mosquitto -ErrorAction SilentlyContinue
-if ($svc) {
-    if ($svc.Status -eq 'Running') {
-        Write-Host "OK (running)" -ForegroundColor Green
-    } else {
-        try {
-            Start-Service mosquitto -ErrorAction Stop
-            Write-Host "OK (service)" -ForegroundColor Green
-        } catch {
-            # Fallback: start manual biar gak perlu Admin
-            $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-            $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-            if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
-                if (Test-Path $mosqConf) {
-                    Start-Process $mosqExe -ArgumentList '-c', $mosqConf, '-v' -WindowStyle Hidden
-                } else {
-                    Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
-                }
-                Write-Host "OK (manual)" -ForegroundColor Green
-            } else {
-                Write-Host "OK (sudah jalan)" -ForegroundColor Green
-            }
-        }
-    }
+if ($svc -and $svc.Status -eq 'Running') {
+    Write-Host "OK (running)" -ForegroundColor Green
+} elseif ($svc) {
+    Start-Service mosquitto -ErrorAction SilentlyContinue
+    Start-Sleep 1
+    $svc = Get-Service mosquitto
+    if ($svc.Status -eq 'Running') { Write-Host "OK (started)" -ForegroundColor Green }
+    else { Write-Host "GAGAL — butuh Admin" -ForegroundColor Red }
 } else {
-    # Fallback kalo service gak terdaftar tapi exe ada
-    $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-    $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-    if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
-        if (Test-Path $mosqConf) {
-            Start-Process $mosqExe -ArgumentList '-c', $mosqConf, '-v' -WindowStyle Hidden
-        } else {
-            Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
-        }
-        Write-Host "OK (manual)" -ForegroundColor Green
-    } else {
-        Write-Host "OK (sudah jalan)" -ForegroundColor Green
-    }
+    Write-Host "LEWAT — Mosquitto gak terinstall" -ForegroundColor Yellow
 }
 
-# 2. Backend via PM2 (kalo ada)
+# 2. Backend via PM2
 Write-Host "[2/3] Backend... " -NoNewline
-$pm2Ok = $null -ne (Get-Command pm2 -ErrorAction SilentlyContinue)
+$pm2Ok = Get-Command pm2 -ErrorAction SilentlyContinue
 if ($pm2Ok) {
-    $pm2List = pm2 list 2>$null
-    if ($pm2List -match "bridge-monitoring") {
-        pm2 restart bridge-monitoring 2>$null
+    $list = pm2 list 2>$null
+    if ($list -match "shms-backend") {
+        pm2 restart shms-backend 2>$null
         Write-Host "OK (PM2 restart)" -ForegroundColor Green
     } else {
-        pm2 start "$root/dist/index.js" --name bridge-monitoring 2>$null
+        pm2 start "$root\dist\index.js" --name shms-backend 2>$null
         Write-Host "OK (PM2 start)" -ForegroundColor Green
     }
 } else {
-    # Fallback: start langsung di background process
-    $p = Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match "dist/index" }
+    # Fallback langsung
+    $p = Get-Process -Name "node" -ErrorAction SilentlyContinue
     if ($p) {
         Write-Host "OK (sudah jalan)" -ForegroundColor Green
     } else {
@@ -71,26 +45,15 @@ if ($pm2Ok) {
     }
 }
 
-# 3. Buka browser
+# 3. Buka dashboard
 Write-Host "[3/3] Dashboard... " -NoNewline
 Start-Process "http://localhost:3000"
 Write-Host "OK" -ForegroundColor Green
 
 # Info IP buat ESP32
+$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -eq 'Wi-Fi' }).IPAddress
 Write-Host ""
-Write-Host "[INFO] IP Mini PC — isi ke WiFi Manager ESP32:" -ForegroundColor Cyan
-$adapters = Get-NetIPAddress -AddressFamily IPv4 | Where-Object {
-    $_.InterfaceAlias -notlike '*Loopback*' -and
-    $_.InterfaceAlias -notlike '*Virtual*' -and
-    $_.InterfaceAlias -notlike '*Bluetooth*' -and
-    $_.PrefixOrigin -ne 'WellKnown'
-}
-foreach ($a in $adapters) {
-    Write-Host "  $($a.InterfaceAlias) : " -NoNewline -ForegroundColor Cyan
-    Write-Host "$($a.IPAddress)" -ForegroundColor Yellow
-}
-
+Write-Host "IP Mini PC (WiFi): $ip" -ForegroundColor Yellow
+Write-Host "Isi IP di atas ke WiFi Manager ESP32" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Done! Dashboard: http://localhost:3000" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "=== DONE ===" -ForegroundColor Green

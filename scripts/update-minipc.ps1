@@ -1,192 +1,80 @@
 ﻿# update-minipc.ps1
-# Satu klik SETUP + UPDATE: install dependencies + pull + build + restart
-# Cara jalanin: klik kanan → "Run with PowerShell"
+# Setup pertama / update project di Mini PC Lenovo
+# Jalanin: PowerShell → kanan "Run with PowerShell"
 
-$root = Split-Path -Parent $PSScriptRoot
-if (-not (Test-Path (Join-Path $root "package.json"))) {
-    Write-Host "Folder ini bukan project SHMS. Jalankan script dari folder project yang sudah di-clone." -ForegroundColor Red
-    exit 1
-}
+$root = "D:\bridge-monitoring"
+$repoUrl = "https://github.com/dyopnj/SHMS-Data-Logger.git"
+$logFile = "$root\setup.log"
+$ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
-$logFile = Join-Path $root "setup.log"
+function Log { param($m) "$ts $m" | Tee-Object -FilePath $logFile -Append }
 
-function Log { param($msg) $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"; "$ts $msg" | Tee-Object -FilePath $logFile -Append }
-function CheckApp { param($cmd) $null = Get-Command $cmd -ErrorAction SilentlyContinue; return $? }
-
+# ─── CEK FOLDER ────────────────────────────────────
+$existing = Test-Path $root
 Log "============================================"
-Log "SETUP MINI PC - BRIDGE SHMS"
-Log "============================================"
-
-# ─── CEK & INSTALL ─────────────────────────────────
-
-# 1. Git
-Log "[1/6] Cek Git..."
-if (CheckApp git) {
-    Log "  OK Git sudah terinstall"
+if (-not $existing) {
+    Log "SETUP PERTAMA — Clone repo"
+    Log "Repo: $repoUrl"
+    git clone $repoUrl $root 2>&1 | ForEach-Object { Log $_ }
+    if (-not (Test-Path $root)) { Log "ERROR: Clone gagal"; exit 1 }
 } else {
-    Log "  Git belum ada. Install via winget..."
-    winget install --id Git.Git --silent 2>&1 | ForEach-Object { Log $_ }
-    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-    if (CheckApp git) {
-        Log "  OK Git berhasil diinstall"
-    } else {
-        Log "  Git gagal install. Download manual dari https://git-scm.com/download/win"
-        Read-Host "Tekan Enter setelah Git terinstall..."
-    }
-}
-
-# 2. Node.js
-Log "[2/6] Cek Node.js..."
-if (CheckApp node) {
-    $nv = node --version
-    Log "  OK Node.js $nv"
-} else {
-    Log "  Node.js belum ada."
-    Log '  Download & install dari https://nodejs.org/ (pilih LTS)'
-    Log "  Pastikan centang 'Automatically install necessary tools'"
-    Start-Process "https://nodejs.org/"
-    Read-Host "Tekan Enter setelah Node.js terinstall..."
-    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-    if (CheckApp node) {
-        Log "  OK Node.js berhasil diinstall"
-    } else {
-        Log "  Node.js masih gak kedetek. Restart PowerShell & jalanin ulang script."
-        Read-Host "Tekan Enter untuk lanjut..."
-    }
-}
-
-# 3. Mosquitto
-Log "[3/6] Cek Mosquitto..."
-$mqttSvc = Get-Service mosquitto -ErrorAction SilentlyContinue
-if ($mqttSvc) {
-    Log "  OK Mosquitto sudah terinstall"
-} else {
-    Log "  Mosquitto belum ada. Install via winget..."
-    winget install --id EclipseMosquitto.Mosquitto --silent 2>&1 | ForEach-Object { Log $_ }
-    $mqttSvc = Get-Service mosquitto -ErrorAction SilentlyContinue
-    if ($mqttSvc) {
-        Log "  OK Mosquitto berhasil diinstall"
-    } else {
-        Log "  Mosquitto gagal install via winget."
-        Log "  Download manual: https://mosquitto.org/download/"
-        Read-Host "Tekan Enter setelah Mosquitto terinstall..."
-        $mqttSvc = Get-Service mosquitto -ErrorAction SilentlyContinue
-    }
-}
-
-# 4. Git pull
-Log "[4/6] Git pull..."
-try {
+    Log "UPDATE — Git pull"
     Push-Location $root
-    git stash --include-untracked 2>&1 | Out-Null
+    git stash --include-untracked 2>$null
     git pull --rebase origin master 2>&1 | ForEach-Object { Log $_ }
     if ($LASTEXITCODE -ne 0) {
-        Log "  Rebase gagal, fallback ke reset --hard..."
-        git fetch origin 2>&1 | Out-Null
+        Log "  Rebase gagal, fallback reset --hard"
+        git fetch origin 2>$null
         git reset --hard origin/master 2>&1 | ForEach-Object { Log $_ }
     }
     Pop-Location
-} catch {
-    Log "  ERROR git pull: $_"
-    Pop-Location
 }
 
-# 5. npm install + build
-Log "[5/6] Install dependencies & build..."
+# ─── INSTALL DEPENDENCIES ──────────────────────────
+Log "--- Install dependencies & build ---"
 Push-Location $root
 npm install 2>&1 | ForEach-Object { Log $_ }
 npm run build 2>&1 | ForEach-Object { Log $_ }
 Pop-Location
 
-# ─── JALANKAN SERVICE ──────────────────────────────
+# ─── INSTALL PM2 (kalo belum) ──────────────────────
+$pm2Ok = Get-Command pm2 -ErrorAction SilentlyContinue
+if (-not $pm2Ok) {
+    Log "--- Install PM2 ---"
+    npm install -g pm2 2>&1 | ForEach-Object { Log $_ }
+}
 
-Log ""
-Log "--- START SERVICE ---"
-
-# Start Mosquitto — coba service dulu, fallback start manual
-if ($mqttSvc) {
-    if ($mqttSvc.Status -eq 'Running') {
-        Log "  Mosquitto: sudah running"
-    } else {
-        try {
-            Start-Service mosquitto -ErrorAction Stop
-            Log "  Mosquitto: di-start (service)"
-        } catch {
-            Log "  Gagal start service (butuh Admin), fallback ke manual..."
-            $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-            $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-            if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
-                if (Test-Path $mosqConf) {
-                    Start-Process $mosqExe -ArgumentList '-c', "$mosqConf", '-v' -WindowStyle Hidden
-                } else {
-                    Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
-                }
-                Start-Sleep -Milliseconds 500
-                Log "  Mosquitto: start manual (process)"
-            } else {
-                Log "  Mosquitto: sudah jalan atau exe gak ditemukan"
-            }
-        }
+# ─── START MOSQUITTO SERVICE ───────────────────────
+Log "--- Start Mosquitto ---"
+$svc = Get-Service mosquitto -ErrorAction SilentlyContinue
+if ($svc) {
+    if ($svc.Status -eq 'Running') { Log "  Mosquitto: sudah running" }
+    else {
+        Start-Service mosquitto -ErrorAction SilentlyContinue
+        Start-Sleep 1
+        $svc = Get-Service mosquitto
+        if ($svc.Status -eq 'Running') { Log "  Mosquitto: OK (service started)" }
+        else { Log "  Mosquitto: GAGAL start — jalankan PowerShell sebagai Admin" }
     }
+}
+
+# ─── START BACKEND via PM2 ─────────────────────────
+Log "--- Start Backend ---"
+$list = pm2 list 2>$null
+if ($list -match "shms-backend") {
+    pm2 restart shms-backend 2>&1 | ForEach-Object { Log $_ }
+    Log "  Backend: restart via PM2"
 } else {
-    $mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
-    $mosqConf = "C:\Program Files\Mosquitto\mosquitto.conf"
-    if ((Test-Path $mosqExe) -and -not (Get-Process -Name mosquitto -ErrorAction SilentlyContinue)) {
-        if (Test-Path $mosqConf) {
-            Start-Process $mosqExe -ArgumentList '-c', "$mosqConf", '-v' -WindowStyle Hidden
-        } else {
-            Start-Process $mosqExe -ArgumentList '-v' -WindowStyle Hidden
-        }
-        Start-Sleep -Milliseconds 500
-        Log "  Mosquitto: start manual (process)"
-    } else {
-    } else {
-        Log "  Mosquitto: LEWAT — gak terinstall"
-    }
+    pm2 start "$root\dist\index.js" --name shms-backend --log "$root\pm2.log" 2>&1 | ForEach-Object { Log $_ }
+    Log "  Backend: start via PM2"
 }
+pm2 save 2>$null
 
-# Cek PM2
-$pm2Ok = CheckApp pm2
-if ($pm2Ok) {
-    $pm2List = pm2 list 2>$null
-    if ($pm2List -match "bridge-monitoring") {
-        pm2 restart bridge-monitoring 2>&1 | ForEach-Object { Log $_ }
-        Log "  Backend: di-restart via PM2"
-    } else {
-        Log "  Backend: jalankan 'pm2 start dist/index.js --name bridge-monitoring'"
-    }
-} else {
-    Log "  Backend: buka PowerShell baru, lalu:"
-    Log "    cd $root"
-    Log "    npm run serve"
-}
+# ─── INFO ──────────────────────────────────────────
+Log "--- SETUP SELESAI ---"
+Log "Dashboard : http://localhost:3000"
+Log "PM2 status: pm2 status"
 
-# Cek IP Mini PC (biar bisa diisi di ESP32)
-Log ""
-Log "[INFO] IP Address Mini PC:"
-$netAdapters = Get-NetIPAddress -AddressFamily IPv4 | Where-Object {
-    $_.InterfaceAlias -notlike '*Loopback*' -and
-    $_.InterfaceAlias -notlike '*Virtual*' -and
-    $_.InterfaceAlias -notlike '*Bluetooth*' -and
-    $_.PrefixOrigin -ne 'WellKnown'
-}
-foreach ($adapter in $netAdapters) {
-    $name = $adapter.InterfaceAlias
-    $ip = $adapter.IPAddress
-    Log "  $name : $ip"
-    Write-Host "  $name : " -NoNewline -ForegroundColor Cyan
-    Write-Host "$ip" -ForegroundColor Yellow
-}
-Write-Host ""
-Write-Host "  Catatan: isi IP di atas ke WiFi Manager ESP32 sebagai MQTT Broker" -ForegroundColor Gray
-
-# Info dashboard
-Log ""
-Log "============================================"
-Log "SETUP SELESAI"
-Log "============================================"
-Log "Dashboard: http://localhost:3000"
-Log "Log file : $logFile"
-Log ""
-Log "Kalo pake mock data (testing tanpa ESP32):"
-Log "  cd $root && npx tsx mock/publisher.ts"
+$ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -eq 'Wi-Fi' }).IPAddress
+Log "IP Mini PC (WiFi): $ip"
+Log "Isi IP di atas ke WiFi Manager ESP32 sebagai MQTT Broker"
