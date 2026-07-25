@@ -23,8 +23,14 @@ export function connect(onDataCb: typeof onData) {
   client.on('message', (topic, payload) => {
     try {
       const raw = JSON.parse(payload.toString());
-      if (topic.endsWith('/data')) handleProcessedData(raw);
-      else if (topic.endsWith('/raw')) handleRawWindow(raw);
+      const node = topic.split('/')[1];
+      if (topic.endsWith('/data')) {
+        console.log(`[MQTT] ✓ Data dari ${node}: RMS=${raw.vibration?.rms?.toFixed(3) ?? '-'}, pitch=${raw.tilt?.pitch?.toFixed(2) ?? '-'}°`);
+        handleProcessedData(raw);
+      } else if (topic.endsWith('/raw')) {
+        console.log(`[MQTT] ✓ Raw FFT dari ${node}: ${raw.raw_accel?.length ?? 0} sample`);
+        handleRawWindow(raw);
+      }
     } catch (err) {
       console.error(`[MQTT] Parse error dari ${topic}:`, err);
     }
