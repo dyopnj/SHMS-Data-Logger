@@ -44,8 +44,10 @@ if (-not $pm2Ok) {
     npm install -g pm2 2>&1 | ForEach-Object { Log $_ }
 }
 
-# ─── START MOSQUITTO SERVICE ───────────────────────
+# ─── START MOSQUITTO ───────────────────────────────
 Log "--- Start Mosquitto ---"
+$mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
+$mosqCfg = "C:\Program Files\Mosquitto\mosquitto.conf"
 $svc = Get-Service mosquitto -ErrorAction SilentlyContinue
 if ($svc) {
     if ($svc.Status -eq 'Running') { Log "  Mosquitto: sudah running" }
@@ -54,8 +56,20 @@ if ($svc) {
         Start-Sleep 1
         $svc = Get-Service mosquitto
         if ($svc.Status -eq 'Running') { Log "  Mosquitto: OK (service started)" }
-        else { Log "  Mosquitto: GAGAL start — jalankan PowerShell sebagai Admin" }
+        else {
+            Log "  Service gagal (butuh Admin), fallback manual..."
+            Start-Process $mosqExe -ArgumentList "-c `"$mosqCfg`" -v" -WindowStyle Hidden
+            Start-Sleep 1
+            if (Get-Process mosquitto -ErrorAction SilentlyContinue) { Log "  Mosquitto: OK (manual process)" }
+            else { Log "  Mosquitto: GAGAL — exe gak ditemukan?" }
+        }
     }
+} else {
+    Log "  Service gak terdaftar, start manual..."
+    Start-Process $mosqExe -ArgumentList "-c `"$mosqCfg`" -v" -WindowStyle Hidden
+    Start-Sleep 1
+    if (Get-Process mosquitto -ErrorAction SilentlyContinue) { Log "  Mosquitto: OK (manual process)" }
+    else { Log "  Mosquitto: GAGAL — exe gak ditemukan?" }
 }
 
 # ─── START BACKEND via PM2 ─────────────────────────

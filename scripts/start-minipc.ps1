@@ -9,6 +9,8 @@ Write-Host "=== START BRIDGE SHMS ===" -ForegroundColor Cyan
 
 # 1. Mosquitto
 Write-Host "[1/3] Mosquitto... " -NoNewline
+$mosqExe = "C:\Program Files\Mosquitto\mosquitto.exe"
+$mosqCfg = "C:\Program Files\Mosquitto\mosquitto.conf"
 $svc = Get-Service mosquitto -ErrorAction SilentlyContinue
 if ($svc -and $svc.Status -eq 'Running') {
     Write-Host "OK (running)" -ForegroundColor Green
@@ -17,9 +19,19 @@ if ($svc -and $svc.Status -eq 'Running') {
     Start-Sleep 1
     $svc = Get-Service mosquitto
     if ($svc.Status -eq 'Running') { Write-Host "OK (started)" -ForegroundColor Green }
-    else { Write-Host "GAGAL — butuh Admin" -ForegroundColor Red }
+    else {
+        Write-Host "manual... " -NoNewline -ForegroundColor Yellow
+        Start-Process $mosqExe -ArgumentList "-c `"$mosqCfg`" -v" -WindowStyle Hidden
+        Start-Sleep 1
+        if (Get-Process mosquitto -ErrorAction SilentlyContinue) { Write-Host "OK" -ForegroundColor Green }
+        else { Write-Host "GAGAL" -ForegroundColor Red }
+    }
 } else {
-    Write-Host "LEWAT — Mosquitto gak terinstall" -ForegroundColor Yellow
+    Write-Host "manual... " -NoNewline -ForegroundColor Yellow
+    Start-Process $mosqExe -ArgumentList "-c `"$mosqCfg`" -v" -WindowStyle Hidden
+    Start-Sleep 1
+    if (Get-Process mosquitto -ErrorAction SilentlyContinue) { Write-Host "OK" -ForegroundColor Green }
+    else { Write-Host "GAGAL" -ForegroundColor Red }
 }
 
 # 2. Backend via PM2
