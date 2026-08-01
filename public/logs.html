@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
+<script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -8,135 +9,66 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
 <title>SHMS - Logs</title>
 </head>
-<body class="bg-background text-on-background font-body-md antialiased">
-<aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
-<div class="mb-8 px-2">
-  <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: OFFLINE</p>
-</div>
-<nav class="space-y-2 flex-1">
-  <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
-  <a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">show_chart</span><span class="nav-text font-body-md">Analysis</span></a>
-  <a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">database</span><span class="nav-text font-body-md">Logs</span></a>
-  <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">settings</span><span class="nav-text font-body-md">Settings</span></a>
-</nav>
-<div class="border-t border-outline-variant pt-4">
-  <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-lg"><span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span></a>
-</div>
-</aside>
-<main class="ml-[260px] flex-1 min-h-screen flex flex-col">
-<header class="sticky top-0 z-30 flex justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant shrink-0">
-  <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
-  <div class="flex items-center gap-3">
-    <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">OFFLINE</span>
-  </div>
-</header>
+<body class="bg-background text-on-background antialiased overflow-hidden h-screen flex">
+<div id="sidebar"></div>
+<main class="ml-[260px] flex-grow flex flex-col h-screen relative w-full">
+<div id="header"></div>
 <div class="flex-grow overflow-y-auto p-margin-desktop bg-background flex flex-col">
-  <!-- Filters Bar -->
-  <div class="flex flex-wrap items-center justify-between gap-4 mb-6 p-4 bg-surface-container-low rounded-lg border border-outline-variant w-full">
-    <div class="flex flex-wrap items-center gap-6 flex-grow">
-      <div class="flex flex-col gap-2">
-        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Date Range</label>
-        <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-variant rounded text-sm text-on-surface-variant border border-outline-variant">
-          <span class="material-symbols-outlined text-sm">calendar_today</span>
-          <span>--</span>
-        </div>
-      </div>
-      <div class="flex flex-col gap-2">
-        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Sensor Type</label>
-        <select class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-3 py-1.5 focus:ring-1 focus:ring-primary outline-none">
-          <option>All Sensors</option>
-          <option>Accelerometer</option>
-          <option>Gyroscope</option>
+
+  <!-- Export Configuration -->
+  <section class="mb-8 p-6 bg-surface-container-low rounded-lg border border-outline-variant">
+    <h2 class="text-headline-md font-bold text-primary mb-6">Export Configuration</h2>
+    <div class="flex flex-wrap items-end gap-4">
+      <div class="flex flex-col gap-2 w-fit">
+        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Node ID</label>
+        <select id="exportNode" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-6 py-2 focus:ring-1 focus:ring-primary w-full">
+          <option value="node_01">Node 01</option>
+          <option value="node_02">Node 02</option>
         </select>
       </div>
-      <div class="flex flex-col gap-2 mt-auto">
-        <button class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-6 py-2.5 rounded-lg font-bold hover:opacity-90 transition-all active:scale-95">
-          <span class="material-symbols-outlined">download</span>
-          Export to Excel
-        </button>
+      <div class="flex flex-col gap-2 w-fit">
+        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Start Time</label>
+        <input id="exportStart" type="datetime-local" step="1" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-3 py-2 focus:ring-1 focus:ring-primary w-full">
       </div>
+      <div class="flex flex-col gap-2 w-fit">
+        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">End Time</label>
+        <input id="exportEnd" type="datetime-local" step="1" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-3 py-2 focus:ring-1 focus:ring-primary w-full">
+      </div>
+      <button id="btnExport" class="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold hover:opacity-90 transition-all active:scale-95 w-fit">
+        <span class="material-symbols-outlined">download</span>
+        Export to CSV
+      </button>
     </div>
-  </div>
+  </section>
 
-  <!-- Table -->
-  <div class="overflow-hidden rounded-lg border border-outline-variant bg-surface-container-low flex-grow max-w-full flex flex-col w-full">
-    <div class="flex-grow overflow-auto relative">
-      <table class="w-full text-left border-collapse min-w-[1200px]">
-        <thead class="sticky top-0 z-30">
+  <!-- Export History -->
+  <section class="p-6 bg-surface-container-low rounded-lg border border-outline-variant flex-grow h-full">
+    <h2 class="text-headline-md font-bold text-primary mb-6">Export History</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
           <tr class="bg-surface-container-high text-on-surface-variant text-[10px] uppercase tracking-widest font-label-mono">
-            <th class="p-3 border-b border-r border-outline-variant text-center sticky left-0 top-0 z-40 bg-surface-container-high" rowspan="2">Timestamp</th>
-            <th class="p-3 border-b border-r border-outline-variant text-center sticky left-[120px] top-0 z-40 bg-surface-container-high shadow-[2px_0_5px_rgba(0,0,0,0.3)]" rowspan="2">Node ID</th>
-            <th class="p-2 text-center border-b border-r border-outline-variant bg-primary/10 text-primary" colspan="6">Accelerometer (m/s²)</th>
-            <th class="p-2 text-center border-b border-outline-variant bg-secondary/10 text-secondary" colspan="6">Gyroscope (rad/s)</th>
-          </tr>
-          <tr class="bg-surface-variant text-on-surface-variant text-[10px] uppercase tracking-widest font-label-mono">
-            <th class="p-2 border-b border-outline-variant/30 text-center">X</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Y</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Z</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Vel X</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Vel Y</th>
-            <th class="p-2 border-b border-r border-outline-variant text-center">Vel Z</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">X</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Y</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Z</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Vel X</th>
-            <th class="p-2 border-b border-outline-variant/30 text-center">Vel Y</th>
-            <th class="p-2 border-b border-outline-variant text-center">Vel Z</th>
+            <th class="p-3 border-b border-outline-variant">Export Time</th>
+            <th class="p-3 border-b border-outline-variant">Node ID</th>
+            <th class="p-3 border-b border-outline-variant">Time Range</th>
+            <th class="p-3 border-b border-outline-variant">Filename</th>
           </tr>
         </thead>
-        <tbody class="text-sm text-on-surface font-label-mono">
+        <tbody id="exportHistoryBody" class="text-sm text-on-surface font-label-mono">
           <tr class="hover:bg-surface-variant/50 border-b border-outline-variant/30">
-            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">--</td>
-            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold" style="opacity:0.7">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary font-bold">--</td>
-          </tr>
-          <tr class="hover:bg-surface-variant/50 border-b border-outline-variant/30">
-            <td class="p-2 border-r border-outline-variant/30 sticky left-0 z-10 bg-surface-container-low">--</td>
-            <td class="p-2 border-r border-outline-variant/30 text-center sticky left-[120px] z-10 bg-surface-container-low shadow-[2px_0_5px_rgba(0,0,0,0.3)]">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary border-r border-outline-variant/30 font-bold">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary">--</td>
-            <td class="p-2 text-center text-secondary font-bold">--</td>
+            <td class="p-3 text-on-surface-variant" colspan="4">Belum ada data export</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
+
 </div>
-<footer class="px-margin-desktop py-6 text-center shrink-0">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
-</footer>
 </main>
 <script src="assets/js/app.js"></script>
-<script>
-console.log("SHMS Data Logger UI Initialized");
-setInterval(() => {
-  const el = document.querySelector('.text-secondary.font-bold');
-  if (el) el.style.opacity = el.style.opacity === '0.7' ? '1' : '0.7';
-}, 1000);
-</script>
+<script src="assets/js/logs.js"></script>
 </body>
 </html>

@@ -7,6 +7,10 @@ import type { ProcessedData, RawWindow } from './types';
 let client: mqtt.MqttClient;
 let onData: ((data: ProcessedData) => void) | null = null;
 
+export function isConnected() {
+  return client?.connected ?? false;
+}
+
 export function connect(onDataCb: typeof onData) {
   onData = onDataCb;
   client = mqtt.connect(config.mqtt_broker);

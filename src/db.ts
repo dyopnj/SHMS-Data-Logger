@@ -45,6 +45,14 @@ db.exec(`
   );
   INSERT OR IGNORE INTO thresholds (param, value) VALUES ('vibration', 0.5);
   INSERT OR IGNORE INTO thresholds (param, value) VALUES ('tilt', 2.0);
+  CREATE TABLE IF NOT EXISTS export_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    node_id TEXT NOT NULL,
+    start_time TEXT NOT NULL,
+    end_time TEXT NOT NULL,
+    filename TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
 `);
 
 const insertReading = db.prepare(`INSERT INTO readings 
@@ -94,6 +102,18 @@ export function getNodeConfig(nodeId: string) {
 
 export function setNodeSamplingRate(nodeId: string, rate: number) {
   db.prepare('INSERT OR REPLACE INTO node_config (node_id, sampling_rate) VALUES (?, ?)').run(nodeId, rate);
+}
+
+export function getReadingsByRange(nodeId: string, start: string, end: string) {
+  return db.prepare('SELECT * FROM readings WHERE node_id = ? AND timestamp >= ? AND timestamp <= ? ORDER BY timestamp ASC').all(nodeId, start, end) as SensorReading[];
+}
+
+export function saveExport(nodeId: string, start: string, end: string, filename: string) {
+  db.prepare('INSERT INTO export_history (node_id, start_time, end_time, filename) VALUES (?, ?, ?, ?)').run(nodeId, start, end, filename);
+}
+
+export function getExports(limit = 50) {
+  return db.prepare('SELECT * FROM export_history ORDER BY created_at DESC LIMIT ?').all(limit);
 }
 
 export default db;

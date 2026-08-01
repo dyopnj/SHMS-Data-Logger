@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
+<script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -8,31 +9,12 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
 </head>
 <body class="bg-background text-on-background antialiased flex">
-<aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
-<div class="mb-8 px-2">
-  <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: OFFLINE</p>
-</div>
-<nav class="space-y-2 flex-1">
-  <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
-  <a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">show_chart</span><span class="nav-text font-body-md">Analysis</span></a>
-  <a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">database</span><span class="nav-text font-body-md">Logs</span></a>
-  <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">settings</span><span class="nav-text font-body-md">Settings</span></a>
-</nav>
-<div class="border-t border-outline-variant pt-4">
-  <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-lg"><span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span></a>
-</div>
-</aside>
+<div id="sidebar"></div>
 <main class="ml-[260px] flex-1 min-h-screen">
-<header class="sticky top-0 z-30 flex justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant">
-  <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
-  <div class="flex items-center gap-3">
-    <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">OFFLINE</span>
-  </div>
-</header>
+<div id="header"></div>
 
 <div class="p-margin-desktop space-y-gutter">
 
@@ -57,7 +39,7 @@
         <span class="font-label-mono text-label-mono text-on-surface-variant">NODE 02</span>
         <div class="flex items-center gap-2 mt-1">
           <span class="material-symbols-outlined text-[18px] text-primary">wifi</span>
-          <span class="material-symbols-outlined text-[18px] text-tertiary">battery_horiz_075</span>
+          <span class="material-symbols-outlined text-[18px] text-tertiary">battery_full</span>
           <span class="text-tertiary font-bold text-body-md">--%</span>
           <span class="text-secondary font-bold text-body-md">OFFLINE</span>
         </div>
@@ -130,13 +112,13 @@
       <div class="space-y-4">
         <div class="flex justify-between items-center pl-3 border-l-2 border-primary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
-          <span class="text-[14px] font-label-mono text-primary font-bold">--°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">? --°</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">--ï¿½</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --ï¿½</span>
         </div>
         <div class="flex justify-between items-center pl-3 border-l-2 border-secondary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
-          <span class="text-[14px] font-label-mono text-secondary font-bold">--°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">? --°</span>
+          <span class="text-[14px] font-label-mono text-secondary font-bold">--ï¿½</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --ï¿½</span>
         </div>
       </div>
     </div>
@@ -146,13 +128,13 @@
       <div class="space-y-4">
         <div class="flex justify-between items-center pl-3 border-l-2 border-tertiary">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Roll</span>
-          <span class="text-[14px] font-label-mono text-tertiary font-bold">--°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">? --°</span>
+          <span class="text-[14px] font-label-mono text-tertiary font-bold">--ï¿½</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --ï¿½</span>
         </div>
         <div class="flex justify-between items-center pl-3 border-l-2 border-primary/50">
           <span class="text-[14px] font-label-mono text-on-surface-variant">Pitch</span>
-          <span class="text-[14px] font-label-mono text-primary font-bold">--°</span>
-          <span class="font-label-mono text-on-surface-variant text-[12px]">? --°</span>
+          <span class="text-[14px] font-label-mono text-primary font-bold">--ï¿½</span>
+          <span class="font-label-mono text-on-surface-variant text-[12px]">? --ï¿½</span>
         </div>
       </div>
     </div>
@@ -219,7 +201,7 @@
 </div><!-- /content -->
 
 <footer class="px-margin-desktop py-6 text-center">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
+  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">ï¿½ 2026 SHMS | Simon Batapa Professional Series</p>
 </footer>
 </main>
 <script src="assets/js/app.js"></script>

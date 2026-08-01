@@ -1,34 +1,66 @@
 // ============================================
-// ANALYSIS PAGE - PLOTLY CHARTS
+// ANALYSIS PAGE - PLOTLY CHARTS (REAL DATA)
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    const plotIds = ['plot-accel-x', 'plot-accel-y', 'plot-accel-z', 'plot-gyro-x'];
-    const variables = ['accel-x', 'accel-y', 'accel-z', 'gyro-x'];
-    const yLabels = ['Acceleration (m/s²)', 'Acceleration (m/s²)', 'Acceleration (m/s²)', 'Velocity (rad/s)'];
-    
-    const peaks = {
-        'accel-x': { n1: 0, n2: 0 },
-        'accel-y': { n1: 0, n2: 0 },
-        'accel-z': { n1: 0, n2: 0 },
-        'gyro-x': { n1: 0, n2: 0 }
+function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#1b2122';
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const MAX_POINTS = 100;
+    const NODE_IDS = ['node_01', 'node_02'];
+    const TRACE_INDEX = { node_01: 0, node_02: 1 };
+    const metricConfigs = [
+        {
+            plotId: 'plot-accel-x',
+            statKey: 'accel-x',
+            yLabel: 'RMS Vibration',
+            getValue: (reading) => reading.rms
+        },
+        {
+            plotId: 'plot-accel-y',
+            statKey: 'accel-y',
+            yLabel: 'Pitch (deg)',
+            getValue: (reading) => reading.pitch
+        },
+        {
+            plotId: 'plot-accel-z',
+            statKey: 'accel-z',
+            yLabel: 'Roll (deg)',
+            getValue: (reading) => reading.roll
+        },
+        {
+            plotId: 'plot-gyro-x',
+            statKey: 'gyro-x',
+            yLabel: 'Magnetic X',
+            getValue: (reading) => reading.mag_x
+        }
+    ];
+
+    const peaks = {};
+    const seriesData = {};
+    metricConfigs.forEach((metric) => {
+        peaks[metric.statKey] = { n1: 0, n2: 0 };
+        seriesData[metric.statKey] = {
+            node_01: [],
+            node_02: []
+        };
+    });
+
+    const toNumber = (value) => {
+        const n = Number(value);
+        return Number.isFinite(n) ? n : null;
     };
 
-    function generateInitialData(points, index) {
-        const now = new Date();
-        const x = [];
-        const n1 = [];
-        const n2 = [];
-
-        for (let i = 0; i < points; i++) {
-            const date = new Date(now.getTime() - (points - i) * 2000);
-            x.push(date);
-            const base = index < 3 ? 0.3 : 15;
-            n1.push(base * Math.sin(i / (12 + index)) + (Math.random() - 0.5) * (base/3));
-            n2.push(base * Math.cos(i / (15 - index)) + (Math.random() - 0.5) * (base/2.5));
+    const median = (values) => {
+        if (!values.length) return 0;
+        const sorted = [...values].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        if (sorted.length % 2 === 0) {
+            return (sorted[mid - 1] + sorted[mid]) / 2;
         }
-        return { x, n1, n2 };
-    }
+        return sorted[mid];
+    };
 
     const getLayout = (yLabel) => ({
         paper_bgcolor: 'rgba(0,0,0,0)',
@@ -36,15 +68,15 @@ document.addEventListener('DOMContentLoaded', function() {
         margin: { t: 30, r: 20, b: 60, l: 70 },
         showlegend: false,
         xaxis: {
-            gridcolor: '#1b2122',
-            tickfont: { color: '#869397', family: 'JetBrains Mono', size: 9 },
-            linecolor: '#3d494c',
+            gridcolor: cssVar('--color-surface-container'),
+            tickfont: { color: cssVar('--color-outline'), family: 'JetBrains Mono', size: 9 },
+            linecolor: cssVar('--color-outline-variant'),
             autorange: true,
             type: 'date',
-            title: { 
-                text: 'Time', 
-                font: { size: 11, color: '#869397', family: 'Inter', weight: 600 }, 
-                standoff: 20 
+            title: {
+                text: 'Time',
+                font: { size: 11, color: cssVar('--color-outline'), family: 'Inter', weight: 600 },
+                standoff: 20
             },
             tickformatstops: [
                 { dtickrange: [null, 1000], value: '%H:%M:%S.%L' },
@@ -52,99 +84,163 @@ document.addEventListener('DOMContentLoaded', function() {
                 { dtickrange: [60000, 3600000], value: '%H:%M' },
                 { dtickrange: [3600000, 86400000], value: '%H:%M\n%b %e' },
                 { dtickrange: [86400000, 604800000], value: '%e %b' },
-                { dtickrange: [604800000, "M1"], value: '%e %b' },
-                { dtickrange: ["M1", "M12"], value: '%b %Y' },
-                { dtickrange: ["M12", null], value: '%Y' }
+                { dtickrange: [604800000, 'M1'], value: '%e %b' },
+                { dtickrange: ['M1', 'M12'], value: '%b %Y' },
+                { dtickrange: ['M12', null], value: '%Y' }
             ]
         },
         yaxis: {
-            gridcolor: '#1b2122',
-            tickfont: { color: '#869397', family: 'JetBrains Mono', size: 9 },
-            linecolor: '#3d494c',
-            zerolinecolor: '#3d494c',
-            title: { 
-                text: yLabel, 
-                font: { size: 11, color: '#869397', family: 'Inter', weight: 600 }, 
-                standoff: 15 
+            gridcolor: cssVar('--color-surface-container'),
+            tickfont: { color: cssVar('--color-outline'), family: 'JetBrains Mono', size: 9 },
+            linecolor: cssVar('--color-outline-variant'),
+            zerolinecolor: cssVar('--color-outline-variant'),
+            title: {
+                text: yLabel,
+                font: { size: 11, color: cssVar('--color-outline'), family: 'Inter', weight: 600 },
+                standoff: 15
             }
         },
         hovermode: 'x unified',
-        hoverlabel: { bgcolor: '#171d1e', bordercolor: '#3d494c', font: { color: '#dee3e6', size: 10 } }
+        hoverlabel: {
+            bgcolor: cssVar('--color-surface-container-low'),
+            bordercolor: cssVar('--color-outline-variant'),
+            font: { color: cssVar('--color-on-surface'), size: 10 }
+        }
     });
 
-    const config = { responsive: true, displayModeBar: false };
+    const chartConfig = { responsive: true, displayModeBar: false };
 
-    // Inisialisasi semua grafik
-    plotIds.forEach((id, index) => {
-        const initial = generateInitialData(60, index);
-        const data = [
-            {
-                x: initial.x,
-                y: initial.n1,
-                name: 'Node 01',
-                type: 'scatter',
-                mode: 'lines',
-                line: { color: '#4cd7f6', width: 2, shape: 'spline' },
-            },
-            {
-                x: initial.x,
-                y: initial.n2,
-                name: 'Node 02',
-                type: 'scatter',
-                mode: 'lines',
-                line: { color: '#ffb95f', width: 2, shape: 'spline' },
-            }
-        ];
-        Plotly.newPlot(id, data, getLayout(yLabels[index]), config);
-    });
+    function updateStats(statKey) {
+        const node1 = seriesData[statKey].node_01;
+        const node2 = seriesData[statKey].node_02;
+        const merged = [...node1, ...node2];
+        const mean = merged.length ? merged.reduce((sum, v) => sum + v, 0) / merged.length : 0;
+        const med = median(merged);
 
-    // Real-time Update setiap 2 detik
-    setInterval(() => {
-        const time = new Date();
-        plotIds.forEach((id, index) => {
-            const varKey = variables[index];
-            const base = index < 3 ? 0.3 : 15;
-            
-            const newVal1 = base * Math.sin(time.getTime() / 2500) + (Math.random() - 0.5) * (base/4);
-            const newVal2 = base * Math.cos(time.getTime() / 3000) + (Math.random() - 0.5) * (base/3);
-            
-            Plotly.extendTraces(id, {
-                y: [[newVal1], [newVal2]],
-                x: [[time], [time]]
-            }, [0, 1]);
+        const meanEl = document.getElementById(`stat-${statKey}-mean`);
+        const medianEl = document.getElementById(`stat-${statKey}-median`);
+        const peak1El = document.getElementById(`stat-${statKey}-peak-n1`);
+        const peak2El = document.getElementById(`stat-${statKey}-peak-n2`);
 
-            // Update Peaks
-            if(Math.abs(newVal1) > peaks[varKey].n1) peaks[varKey].n1 = Math.abs(newVal1);
-            if(Math.abs(newVal2) > peaks[varKey].n2) peaks[varKey].n2 = Math.abs(newVal2);
+        if (meanEl) meanEl.innerText = mean.toFixed(2);
+        if (medianEl) medianEl.innerText = med.toFixed(2);
+        if (peak1El) peak1El.innerText = peaks[statKey].n1.toFixed(2);
+        if (peak2El) peak2El.innerText = peaks[statKey].n2.toFixed(2);
+    }
 
-            // Update Stats Display
-            const meanEl = document.getElementById(`stat-${varKey}-mean`);
-            const medianEl = document.getElementById(`stat-${varKey}-median`);
-            const peak1El = document.getElementById(`stat-${varKey}-peak-n1`);
-            const peak2El = document.getElementById(`stat-${varKey}-peak-n2`);
+    function pushReadingToSeries(metric, nodeId, value) {
+        const bucket = seriesData[metric.statKey][nodeId];
+        bucket.push(value);
+        if (bucket.length > MAX_POINTS) {
+            bucket.shift();
+        }
+    }
 
-            if(meanEl) meanEl.innerText = ((newVal1 + newVal2)/2).toFixed(2);
-            if(medianEl) medianEl.innerText = (Math.max(newVal1, newVal2)/1.2).toFixed(2);
-            if(peak1El) peak1El.innerText = peaks[varKey].n1.toFixed(2);
-            if(peak2El) peak2El.innerText = peaks[varKey].n2.toFixed(2);
+    function updatePeak(metric, nodeId, value) {
+        const peakKey = nodeId === 'node_01' ? 'n1' : 'n2';
+        const absValue = Math.abs(value);
+        if (absValue > peaks[metric.statKey][peakKey]) {
+            peaks[metric.statKey][peakKey] = absValue;
+        }
+    }
 
-            // Sliding window only if not zoomed manually
-            const el = document.getElementById(id);
-            if (el.layout.xaxis.autorange && el.data[0].x.length > 100) {
-                Plotly.relayout(id, {
-                    'xaxis.range': [
-                        el.data[0].x[el.data[0].x.length - 100],
-                        el.data[0].x[el.data[0].x.length - 1]
-                    ]
-                });
-            }
+    async function loadInitialHistory() {
+        const requests = NODE_IDS.map((nodeId) => api(`/api/readings/${nodeId}?limit=${MAX_POINTS}`));
+        const [node1Rows, node2Rows] = await Promise.all(requests);
+        return {
+            node_01: Array.isArray(node1Rows) ? [...node1Rows].reverse() : [],
+            node_02: Array.isArray(node2Rows) ? [...node2Rows].reverse() : []
+        };
+    }
+
+    function initCharts(history) {
+        metricConfigs.forEach((metric) => {
+            const node1Rows = history.node_01;
+            const node2Rows = history.node_02;
+
+            const node1Points = node1Rows
+                .map((row) => ({ x: new Date(row.timestamp), y: toNumber(metric.getValue(row)) }))
+                .filter((point) => point.y !== null);
+            const node2Points = node2Rows
+                .map((row) => ({ x: new Date(row.timestamp), y: toNumber(metric.getValue(row)) }))
+                .filter((point) => point.y !== null);
+
+            seriesData[metric.statKey].node_01 = node1Points.map((point) => point.y).slice(-MAX_POINTS);
+            seriesData[metric.statKey].node_02 = node2Points.map((point) => point.y).slice(-MAX_POINTS);
+            peaks[metric.statKey].n1 = node1Points.reduce((max, p) => Math.max(max, Math.abs(p.y)), 0);
+            peaks[metric.statKey].n2 = node2Points.reduce((max, p) => Math.max(max, Math.abs(p.y)), 0);
+
+            Plotly.newPlot(metric.plotId, [
+                {
+                    x: node1Points.map((point) => point.x),
+                    y: node1Points.map((point) => point.y),
+                    name: 'Node 01',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: '#4cd7f6', width: 2, shape: 'spline' }
+                },
+                {
+                    x: node2Points.map((point) => point.x),
+                    y: node2Points.map((point) => point.y),
+                    name: 'Node 02',
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: '#ffb95f', width: 2, shape: 'spline' }
+                }
+            ], getLayout(metric.yLabel), chartConfig);
+
+            updateStats(metric.statKey);
         });
-    }, 2000);
+    }
 
-    // Reset all layouts
-    document.getElementById('btn-reset-all').addEventListener('click', () => {
-        plotIds.forEach((id) => {
-            Plotly.relayout(id, {
+    function handleLivePayload(payload) {
+        const nodeId = payload && payload.node_id;
+        if (!TRACE_INDEX.hasOwnProperty(nodeId)) {
+            return;
+        }
+        const traceIndex = TRACE_INDEX[nodeId];
+        const timestamp = new Date(payload.timestamp || new Date().toISOString());
+
+        metricConfigs.forEach((metric) => {
+            const value = toNumber(metric.getValue(payload));
+            if (value === null) {
+                return;
+            }
+
+            Plotly.extendTraces(metric.plotId, {
+                y: [[value]],
+                x: [[timestamp]]
+            }, [traceIndex], MAX_POINTS);
+
+            pushReadingToSeries(metric, nodeId, value);
+            updatePeak(metric, nodeId, value);
+            updateStats(metric.statKey);
+        });
+    }
+
+    try {
+        const history = await loadInitialHistory();
+        initCharts(history);
+    } catch (error) {
+        console.error('[Analysis] Failed to load initial data', error);
+        metricConfigs.forEach((metric) => {
+            Plotly.newPlot(metric.plotId, [
+                { x: [], y: [], name: 'Node 01', type: 'scatter', mode: 'lines', line: { color: '#4cd7f6', width: 2 } },
+                { x: [], y: [], name: 'Node 02', type: 'scatter', mode: 'lines', line: { color: '#ffb95f', width: 2 } }
+            ], getLayout(metric.yLabel), chartConfig);
+            updateStats(metric.statKey);
+        });
+    }
+
+    window.addEventListener('themechange', () => {
+        metricConfigs.forEach((metric) => Plotly.relayout(metric.plotId, getLayout(metric.yLabel)));
+    });
+
+    connectWS(handleLivePayload);
+
+    document.getElementById('btn-reset-all')?.addEventListener('click', () => {
+        metricConfigs.forEach((metric) => {
+            Plotly.relayout(metric.plotId, {
                 'xaxis.autorange': true,
                 'yaxis.autorange': true
             });

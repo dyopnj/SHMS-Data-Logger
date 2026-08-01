@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
+<script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -8,32 +9,13 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="assets/js/tailwind-config.js"></script>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
 <title>SHMS - Settings</title>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased">
-<aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
-<div class="mb-8 px-2">
-  <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-  <p class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: ACTIVE</p>
-</div>
-<nav class="space-y-2 flex-1">
-  <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
-  <a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">show_chart</span><span class="nav-text font-body-md">Analysis</span></a>
-  <a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">database</span><span class="nav-text font-body-md">Logs</span></a>
-  <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">settings</span><span class="nav-text font-body-md">Settings</span></a>
-</nav>
-<div class="border-t border-outline-variant pt-4">
-  <a href="index.html" class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-lg"><span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span></a>
-</div>
-</aside>
+<div id="sidebar"></div>
 <main class="ml-[260px] flex-1 min-h-screen">
-<header class="sticky top-0 z-30 flex justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant">
-  <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
-  <div class="flex items-center gap-3">
-    <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">LIVE</span>
-  </div>
-</header>
+<div id="header"></div>
 <div class="p-margin-desktop space-y-gutter">
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
   <div>
@@ -45,7 +27,7 @@
       <span class="material-symbols-outlined text-[20px]">restart_alt</span>
       <span>Reset to Default</span>
     </button>
-    <button class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(76,215,246,0.4)] transition-all active:scale-95 flex items-center gap-2">
+    <button id="btn-save-all" class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(76,215,246,0.4)] transition-all active:scale-95 flex items-center gap-2">
       <span class="material-symbols-outlined text-[20px]">save</span>
       <span>Save Changes</span>
     </button>
@@ -70,12 +52,17 @@
         <div class="space-y-4">
           <div>
             <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
-            <input type="range" min="1" max="1000" value="500" class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary">
-            <div class="flex justify-between mt-2 font-label-mono text-on-surface-variant">
-              <span>1 Hz</span>
-              <span class="text-primary font-bold">500 Hz</span>
-              <span>1000 Hz</span>
-            </div>
+            <select id="samplingRate0" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
+              <option value="50">50 Hz</option>
+              <option value="100">100 Hz</option>
+              <option value="150">150 Hz</option>
+              <option value="250">250 Hz</option>
+              <option value="300">300 Hz</option>
+              <option value="350">350 Hz</option>
+              <option value="400">400 Hz</option>
+              <option value="450">450 Hz</option>
+              <option value="500" selected>500 Hz</option>
+            </select>
           </div>
           <div>
             <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
@@ -124,12 +111,17 @@
         <div class="space-y-4">
           <div>
             <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
-            <input type="range" min="1" max="1000" value="500" class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary">
-            <div class="flex justify-between mt-2 font-label-mono text-on-surface-variant">
-              <span>1 Hz</span>
-              <span class="text-primary font-bold">500 Hz</span>
-              <span>1000 Hz</span>
-            </div>
+            <select id="samplingRate1" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
+              <option value="50">50 Hz</option>
+              <option value="100">100 Hz</option>
+              <option value="150">150 Hz</option>
+              <option value="250">250 Hz</option>
+              <option value="300">300 Hz</option>
+              <option value="350">350 Hz</option>
+              <option value="400">400 Hz</option>
+              <option value="450">450 Hz</option>
+              <option value="500" selected>500 Hz</option>
+            </select>
           </div>
           <div>
             <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
@@ -179,24 +171,24 @@
       <div class="space-y-4 relative">
         <div>
           <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Server IP Address</label>
-          <input type="text" value="192.168.10.155" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+          <input id="serverIp" type="text" readonly class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background outline-none cursor-default">
         </div>
         <div>
-          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">MQTT Broker URL</label>
-          <input type="text" value="tcp://shms-core.local:1883" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">MQTT Broker</label>
+          <input id="mqttBroker" type="text" readonly class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background outline-none cursor-default">
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Port</label>
-            <input type="number" value="8080" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[20px] text-on-surface-variant">wifi</span>
+            <div>
+              <p class="font-body-md font-bold">MQTT Connection</p>
+              <p class="text-[12px] text-on-surface-variant">Bridge to data logger</p>
+            </div>
           </div>
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Sync Interval</label>
-            <input type="text" value="15s" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
+          <div class="flex items-center gap-2">
+            <span id="mqttLed" class="status-led offline"></span>
+            <span id="mqttStatus" class="font-label-mono text-label-mono text-error">DISCONNECTED</span>
           </div>
-        </div>
-        <div class="pt-2">
-          <button class="w-full border border-primary text-primary py-2 rounded-lg font-bold hover:bg-primary/5 transition-colors">Test Connection</button>
         </div>
       </div>
     </div>
@@ -234,14 +226,6 @@
 </footer>
 </main>
 <script src="assets/js/app.js"></script>
-<script>
-document.getElementById('btn-save-threshold')?.addEventListener('click', async () => {
-  for (const p of ['vibration','tilt']) {
-    const val = parseFloat(document.getElementById('th-'+p).value);
-    if (!isNaN(val)) await fetch('/api/threshold/'+p, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({value:val}) });
-  }
-  alert('Threshold tersimpan!');
-});
-</script>
+<script src="assets/js/settings.js"></script>
 </body>
 </html>

@@ -1,111 +1,88 @@
 <!DOCTYPE html>
-<html class="dark" lang="id">
+<html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SHMS - Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style>
-        body {
-            background: #0e1416;
-            font-family: 'Inter', sans-serif;
-        }
-        .login-card {
-            background: #171d1e;
-            border: 1px solid #3d494c;
-            border-radius: 1rem;
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-        }
-        .login-card h1 {
-            color: #4cd7f6;
-            font-weight: 700;
-            font-size: 28px;
-            letter-spacing: 1px;
-        }
-        .login-card .sub {
-            color: #869397;
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-        }
-        .login-card input {
-            background: #0e1416;
-            border: 1px solid #3d494c;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            width: 100%;
-            color: #dee3e6;
-            font-size: 14px;
-            margin-bottom: 1rem;
-        }
-        .login-card input:focus {
-            outline: none;
-            border-color: #4cd7f6;
-            box-shadow: 0 0 0 2px rgba(76,215,246,0.3);
-        }
-        .login-card button {
-            background: #4cd7f6;
-            color: #003640;
-            font-weight: 700;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 0.5rem;
-            width: 100%;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .login-card button:hover {
-            opacity: 0.85;
-            transform: scale(1.02);
-        }
-        .login-card .signup {
-            color: #869397;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 1.5rem;
-        }
-        .login-card .signup a {
-            color: #4cd7f6;
-            text-decoration: none;
-            font-weight: 500;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHMS - Login</title>
+  <link rel="icon" type="image/png" href="/assets/js/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="login-card">
-            <h1 class="text-center">SHMS</h1>
-            <div class="sub text-center">SIMON BATAPA 2026</div>
-            <form id="loginForm">
-                <input type="text" id="username" placeholder="Username" value="admin" />
-                <input type="password" id="password" placeholder="Password" value="admin123" />
-                <button type="submit">Masuk ke Dashboard</button>
-            </form>
-            <div class="signup">
-                Belum punya akun? <a href="#">Daftar</a>
-            </div>
-        </div>
+<body class="min-h-screen overflow-hidden font-['Poppins']">
+  <div class="relative min-h-screen w-full overflow-hidden">
+    <img
+      src="/assets/cover.jpg"
+      alt="Cover background"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+
+    <div class="absolute bottom-6 left-6 w-[min(90vw,760px)] px-2 py-2 lg:px-4">
+      <div class="text-2xl font-bold text-amber-500 [text-shadow:_0px_2px_4px_rgb(0_0_0_/_0.45)] sm:text-4xl lg:text-5xl">SHMS SIMON BATAPA 2026</div>
+      <div class="mt-2 text-lg text-amber-500 [text-shadow:_0px_2px_4px_rgb(0_0_0_/_0.45)] sm:text-xl lg:text-2xl">Instrumentation &amp; Control Industry</div>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Validasi sederhana (hardcoded)
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            if (user === 'admin' && pass === 'admin123') {
-                window.location.href = 'home.html';
-            } else {
-                alert('Username atau password salah! (gunakan admin/admin123)');
-            }
-        });
-    </script>
+    <div class="absolute right-6 top-1/2 w-[min(92vw,510px)] -translate-y-1/2 rounded-[48px] border border-white/30 bg-white/10 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:p-10">
+      <div class="mx-auto mb-10 h-36 w-56 overflow-hidden rounded-[2rem] bg-white/25 p-2">
+        <img
+          src="/assets/logoremoved.png"
+          alt="SHMS Logo"
+          class="h-full w-full object-contain"
+        />
+      </div>
+
+      <h1 class="text-left text-4xl font-bold leading-tight text-blue-500 [text-shadow:_0px_4px_4px_rgb(0_0_0_/_0.25)] sm:text-5xl">
+        Welcome<br />back....
+      </h1>
+
+      <form id="loginForm" class="mt-12 space-y-5">
+        <label class="sr-only" for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          name="username"
+          placeholder="Username"
+          value="admin"
+          required
+          class="h-14 w-full rounded-[20px] border-2 border-transparent bg-orange-50 px-8 text-xl text-black transition hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+
+        <label class="sr-only" for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Password"
+          value="admin123"
+          required
+          class="h-14 w-full rounded-[20px] border-2 border-transparent bg-orange-50 px-8 text-xl text-black transition hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+
+        <button
+          type="submit"
+          class="h-14 w-full rounded-[20px] bg-blue-500 px-8 text-2xl font-semibold text-orange-50 transition hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      if (user === 'admin' && pass === 'admin123') {
+        window.location.href = 'home.html';
+        return;
+      }
+
+      alert('Username atau password salah! (gunakan admin/admin123)');
+    });
+  </script>
 </body>
 </html>
