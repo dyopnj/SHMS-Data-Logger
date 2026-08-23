@@ -8,7 +8,7 @@ export function fft(samples: number[], sampleRate: number): { freq: number; magn
   const indices = new Array<number>(n);
   for (let i = 0; i < n; i++) indices[i] = i;
   for (let i = 0; i < n; i++) {
-    const j = parseInt(i.toString(2).padStart(power.toString(2).length, '0').split('').reverse().join(''), 2);
+    const j = parseInt(i.toString(2).padStart(power, '0').split('').reverse().join(''), 2);
     if (j > i) { [indices[i], indices[j]] = [indices[j], indices[i]]; }
   }
 
