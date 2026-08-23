@@ -3,7 +3,7 @@ import http from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import path from 'path';
 import fs from 'fs';
-import { getReadings, getReadingsByRange, getThreshold, setThreshold, getAlerts, getNodeConfig, setNodeSamplingRate, saveExport, getExports } from './db';
+import { getReadings, getReadingsByRange, getThreshold, setThreshold, getAlerts, getNodeConfig, setNodeSamplingRate, saveExport, getExports, getFft } from './db';
 import { isConnected } from './mqtt';
 import config from './config';
 import type { ProcessedData } from './types';
@@ -32,6 +32,10 @@ export function createServer(port: number) {
     } else {
       res.json(getReadings(req.params.nodeId, Number(req.query.limit) || 500));
     }
+  });
+
+  app.get('/api/fft/:nodeId', (req, res) => {
+    res.json(getFft(req.params.nodeId, Number(req.query.limit) || 5));
   });
 
   app.get('/api/alerts', (_req, res) => {

@@ -83,6 +83,10 @@ export function getReadings(nodeId: string, limit = 500) {
   return db.prepare('SELECT * FROM readings WHERE node_id = ? ORDER BY timestamp DESC LIMIT ?').all(nodeId, limit) as SensorReading[];
 }
 
+export function getFft(nodeId: string, limit = 5) {
+  return db.prepare('SELECT * FROM fft_results WHERE node_id = ? ORDER BY timestamp DESC LIMIT ?').all(nodeId, limit) as FftResult[];
+}
+
 export function getThreshold(param: string): number {
   const row = db.prepare('SELECT value FROM thresholds WHERE param = ?').get(param) as { value: number } | undefined;
   return row?.value ?? 0;
