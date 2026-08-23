@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         return Number.isFinite(n) ? n : null;
     };
 
+    // Firmware kirim timestamp time-only "HH:MM:SS.mmm" (tanpa tanggal).
+    // new Date("00:22:32") = Invalid Date, jadi prepend tanggal hari ini.
+    const parseTs = (s) => {
+        const d = new Date(s);
+        if (!isNaN(d)) return d;
+        const m = String(s).match(/^(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?/);
+        if (!m) return null;
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+            +m[1], +m[2], +m[3], +String(m[4] || '0').padEnd(3, '0'));
+    };
+
     const median = (values) => {
         if (!values.length) return 0;
         const sorted = [...values].sort((a, b) => a - b);
@@ -159,11 +171,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             const node2Rows = history.node_02;
 
             const node1Points = node1Rows
-                .map((row) => ({ x: new Date(row.timestamp), y: toNumber(metric.getValue(row)) }))
-                .filter((point) => point.y !== null);
+                .map((row) => ({ x: parseTs(row.timestamp), y: toNumber(metric.getValue(row)) }))
+                .filter((point) => point.x !== null && point.y !== null);
             const node2Points = node2Rows
-                .map((row) => ({ x: new Date(row.timestamp), y: toNumber(metric.getValue(row)) }))
-                .filter((point) => point.y !== null);
+                .map((row) => ({ x: parseTs(row.timestamp), y: toNumber(metric.getValue(row)) }))
+                .filter((point) => point.x !== null && point.y !== null);
 
             seriesData[metric.statKey].node_01 = node1Points.map((point) => point.y).slice(-MAX_POINTS);
             seriesData[metric.statKey].node_02 = node2Points.map((point) => point.y).slice(-MAX_POINTS);
@@ -199,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
         const traceIndex = TRACE_INDEX[nodeId];
-        const timestamp = new Date(payload.timestamp || new Date().toISOString());
+        const timestamp = parseTs(payload.timestamp) || new Date();
 
         metricConfigs.forEach((metric) => {
             const value = toNumber(metric.getValue(payload));
