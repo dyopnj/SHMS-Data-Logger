@@ -1,0 +1,204 @@
+================================================================================
+RINGKASAN ANALISIS PROGRAM SHMS (Bridge Structural Health Monitoring)
+Fokus: Struktur program & kesiapan integrasi model ANFIS
+Tanggal: 14 September 2026
+================================================================================
+
+--------------------------------------------------------------------------------
+1. BAHASA / FRAMEWORK
+--------------------------------------------------------------------------------
+- Backend : Node.js + TypeScript (Express 4.19, ws 8.17, mqtt 5.10,
+            better-sqlite3 11) -> nama proyek "bridge-monitoring"
+- Build   : tsx (dev/start), tsc (build ke dist/), target ES2022, module commonjs
+- Frontend: HTML statis + Tailwind CSS + Plotly (folder public/)
+- Firmware: ESP32 (C++ / PlatformIO, framework Arduino)
+            Lokasi: D:\Politeknik Negeri Jakarta\= SHM, SIMON BATAPA\Nodenode\NodeNode
+            CATATAN: folder firmware sudah TIDAK ADA di repo ini
+            (dihapus commit 654b7b8). Sumber kebenaran sisi node = NodeNode.
+- Broker  : Mosquitto (MQTT)
+
+
+--------------------------------------------------------------------------------
+2. FORMAT DATA YANG DITERIMA DARI NODE
+--------------------------------------------------------------------------------
+Ada 2 payload utama (definisi: src/types.ts, firmware: payload_builder.cpp):
+
+A. PROCESSED DATA (per 1 detik) - topic bridge/{node_id}/data
+   Contoh JSON asli:
+   {
+     "node_id": "node_01",
+     "timestamp": "2026-07-17T10:00:00",
+     "sampling_rate_hz": 200,
+     "connection_status": "online",
+     "vibration": { "rms": 0.023 },
+     "tilt": { "pitch": 1.20, "roll": -0.85,
+               "pitch_delta": 0.10, "roll_delta": -0.05 },
+     "magnetometer": { "mag_x": 0.0, "mag_y": 0.0, "mag_z": 0.0 },
+     "accelerometer": { "x": 0.01, "y": 0.02, "z": 1.00 },
+     "gyroscope": { "x": 0.5, "y": -0.2, "z": 0.1 }
+   }
+   Satuan: rms=g, pitch/roll/delta=derajat, accel=g, gyro=deg/s, mag=uT
+   Catatan: accelerometer/gyroscope SELALU ada (snapshot raw untuk dashboard),
+            magnetometer SELALU 0.0 (driver masih stub).
+
+B. RAW WINDOW (berkala, default 15 detik) - topic bridge/{node_id}/raw
+   Contoh JSON asli:
+   {
+     "node_id": "node_01",
+     "timestamp": "2026-07-17T10:00:00",
+     "window_size": 256,
+     "sampling_rate_hz": 200,
+     "raw_accel": [0.012, -0.003, "... 256 angka float"]
+   }
+   Catatan penting: raw_accel = 256 sampel AXIS Z accel saja (bukan magnitude,
+   bukan xyz terpisah), gravitasi sudah dikurangi.
+   sampling_rate_hz di payload ini memakai konstanta default (200), bukan rate aktual.
+
+Jumlah sample per payload:
+- Processed : 1 nilai per field (agregat 1 detik)
+- Raw window: 256 sampel float
+
+
+--------------------------------------------------------------------------------
+3. RAW ATAU SUDAH DIPROSES?
+--------------------------------------------------------------------------------
+DOMINAN SUDAH DIPROSES, pemrosesan dilakukan di NODE (ESP32), bukan di backend.
+
+Sudah diproses DI NODE:
+- rms_vibration  : RMS magnitude accel, window 1 detik (200 sampel),
+                   gravitasi dihilangkan (rms_calculator.h)
+- pitch/roll     : KALMAN FILTER 2-state (accel+gyro) - kalman_filter.cpp
+                   (BUKAN complementary filter; PRD lama salah menyebutnya)
+- pitch/roll_delta: nilai sekarang - baseline (baseline.h, 100 sampel kalibrasi)
+- Gyro           : kalibrasi 500 sampel, warmup 5s, adaptive bias, deadband 0.6 dps
+- raw_window     : ring buffer 256 sampel axis Z (fft_buffer.h)
+                   ESP32 TIDAK menghitung FFT (sesuai spesifikasi)
+
+Di BACKEND: TIDAK ada pemrosesan sinyal pada data processed. Backend hanya
+menyimpan apa adanya. Satu-satunya pemrosesan = FFT untuk raw window (poin 4).
+
+Untuk ANFIS: fitur tilt/RMS sudah tersedia & bersih (sudah difilter).
+Accel/gyro raw xyz MENTAH tidak masuk DB (hanya tampil live di dashboard).
+
+
+--------------------------------------------------------------------------------
+4. MODUL FFT / ANALISIS FREKUENSI
+--------------------------------------------------------------------------------
+ADA, di src/fft.ts (56 baris) - implementasi FFT radix-2 buatan sendiri
+(tanpa library eksternal).
+
+- fft(samples, sampleRate)      : bit-reversal + butterfly, spektrum magnitudo
+                                  half positif. Syarat panjang = power of 2.
+- dominantFrequency(samples, sr): skip bin DC, ambil peak, dibulatkan 2 desimal.
+
+Dipakai di src/mqtt.ts:100 (handleRawWindow):
+  - hitung dominantFrequency dari raw_accel
+  - simpan ke tabel fft_results (hanya SATU angka: dominant_freq)
+
+Yang BELUM ada: windowing (Hann/Hamming), detrending, PSD, band energy,
+FFT multi-axis (hanya magnitude scalar), penyimpanan spektrum penuh.
+
+
+--------------------------------------------------------------------------------
+5. PENYIMPANAN DATA
+--------------------------------------------------------------------------------
+SQLite file data.db (WAL mode) via better-sqlite3. Skema di src/db.ts.
+
+Tabel:
+- readings       : id, node_id, timestamp, rms, pitch, roll, pitch_delta,
+                   roll_delta, pitch_baseline, roll_baseline,
+                   mag_x, mag_y, mag_z, connection_status
+- fft_results    : id, node_id, timestamp, dominant_freq, window_size, sampling_rate
+- alerts         : id, node_id, timestamp, type('vibration'|'tilt'), value, threshold
+- thresholds     : param UNIQUE, value (default vibration=0.5, tilt=2.0)
+- node_config    : node_id PK, sampling_rate, publish_interval,
+                   raw_window_interval, sensitivity_gain
+- export_history : node_id, start_time, end_time, filename, created_at
+- kv             : key PK, value (menyimpan cutoff "reset tampilan")
+
+Mekanisme "reset view" (setResetPoint, db.ts:97): simpan MAX(id) ke kv;
+query limit/latest hanya menampilkan baris id > cutoff. Data lama tetap ada.
+
+
+--------------------------------------------------------------------------------
+6. LOKASI MENAMBAHKAN MODUL KLASIFIKASI (ANFIS)
+--------------------------------------------------------------------------------
+Mengikuti pola arsitektur yang ada:
+
+  src/
+    anfis.ts        <- [BARU] model inferensi ANFIS (pola seperti fft.ts)
+    features.ts     <- [BARU, opsional] ekstraksi fitur dari reading + fft window
+    db.ts           <- [UBAH] tambah tabel anfis_results + saveAnfis()
+    mqtt.ts         <- [UBAH] panggil inferensi di handleProcessedData /
+                              handleRawWindow
+    api.ts          <- [UBAH] endpoint GET /api/anfis/:nodeId
+    types.ts        <- [UBAH] tambah interface AnifisResult
+  scripts/
+    train-anfis.ts  <- [BARU, opsional] training offline (baca readings/fft_results)
+
+Alasan:
+- fft.ts = preseden modul komputasi murni -> buat src/anfis.ts dengan pola sama
+- Hook paling alami di mqtt.ts:
+  * handleProcessedData (mqtt.ts:69) -> klasifikasi real-time berbasis RMS/tilt
+  * handleRawWindow (mqtt.ts:100)     -> jika ANFIS butuh fitur domain frekuensi
+- Persistensi: tambah tabel di db.ts (pola saveFft), expose di api.ts (pola /api/fft)
+- Tidak ada "service layer"; semua logika bisnis langsung di mqtt.ts
+
+
+--------------------------------------------------------------------------------
+7. DEPENDENCY / LIBRARY YANG SUDAH TERPASANG
+--------------------------------------------------------------------------------
+package.json:
+  dependencies    : better-sqlite3, express, mqtt, ws
+  devDependencies : @types/better-sqlite3, @types/express, @types/ws,
+                    tsx, typescript
+
+TIDAK ADA scipy, numpy, fuzzylogic, ml-matrix, mathjs, tensorflow, brain.js,
+atau library FFT apa pun. FFT yang ada = implementasi manual di src/fft.ts.
+
+Untuk ANFIS di Node.js/TypeScript perlu tambah dependency sendiri
+(mis. ml-matrix/mathjs untuk operasi matriks + gradient descent), atau
+training di Python lalu ekspor parameter MF+consequent ke JSON -> inferensi di TS.
+
+
+--------------------------------------------------------------------------------
+8. SAMPLING RATE & JUMLAH NODE
+--------------------------------------------------------------------------------
+- Sampling rate: default 200 Hz (SAMPLE_RATE_DEFAULT_HZ di config.h).
+  Dapat diubah remote via PUT /api/node/:nodeId/config (range 50-200 Hz),
+  dikirim ke firmware sebagai command MQTT bridge/{id}/cmd/sampling_rate.
+  -> JANGAN hardcode 200; baca sampling_rate_hz dari payload.
+
+- Jumlah node: 2 (node_01, node_02). Desain scalable untuk penambahan node.
+
+Implikasi FFT/ANFIS:
+  Window 256 sampel @ 200 Hz = 1.28 detik
+  Resolusi frekuensi = 200/256 = 0.78125 Hz
+  Nyquist = 100 Hz
+  Jika perlu resolusi lebih halus: window lebih besar (512/1024) atau zero-padding.
+
+
+================================================================================
+RINGKASAN KESIAPAN INTEGRASI ANFIS
+================================================================================
+| Aspek          | Status saat ini                                  |
+|----------------|--------------------------------------------------|
+| Bahasa         | Node.js + TypeScript (model harus TS/JS)         |
+| Input          | Processed (RMS, pitch/roll/delta) + raw 256@200Hz|
+| Filtering      | Kalman di node (bukan di repo ini)               |
+| FFT            | Manual src/fft.ts, hanya dominant_freq tersimpan |
+| DB             | SQLite 7 tabel                                   |
+| Library ML     | TIDAK ADA (harus tambah / implementasi manual)   |
+| Sampling       | 200 Hz default, 2 node, jangan hardcode          |
+
+Fitur paling relevan untuk ANFIS saat ini (sudah tersimpan per timestamp):
+1. rms (getaran, g)
+2. pitch_delta, roll_delta (pergeseran struktur, derajat)
+3. dominant_freq (Hz, dari FFT 256@200Hz -> resolusi 0.78125 Hz)
+
+Batasan penting:
+- Magnetometer = 0 (stub) -> jangan pakai untuk yaw/twist
+- FFT hanya axis Z (getaran vertikal), bukan magnitude/xyz
+- Tidak ada windowing/PSD/band energy -> perlu dikembangkan untuk fitur ANFIS
+
+================================================================================

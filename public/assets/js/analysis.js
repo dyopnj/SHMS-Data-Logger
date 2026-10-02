@@ -3,11 +3,12 @@
 // ============================================
 
 function cssVar(name) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#1b2122';
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#1B2B4B';
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
     const MAX_POINTS = 100;
+    const WINDOW_MS = 60 * 1000; // jendela x-axis bergulir 60 detik
     const NODE_IDS = ['node_01', 'node_02'];
     const TRACE_INDEX = { node_01: 0, node_02: 1 };
     const metricConfigs = [
@@ -28,14 +29,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             statKey: 'accel-z',
             yLabel: 'Roll (deg)',
             getValue: (reading) => reading.roll
-        },
-        {
-            plotId: 'plot-gyro-x',
-            statKey: 'gyro-x',
-            yLabel: 'Magnetic X',
-            getValue: (reading) => reading.mag_x
         }
     ];
+
+    const COLOR_N1 = () => cssVar('--orange');
+    const COLOR_N2 = () => cssVar('--navy');
 
     const peaks = {};
     const seriesData = {};
@@ -52,7 +50,17 @@ document.addEventListener('DOMContentLoaded', async function () {
         return Number.isFinite(n) ? n : null;
     };
 
-    // Firmware kirim timestamp time-only "HH:MM:SS.mmm" (tanpa tanggal).
+    const median = (values) => {
+        if (!values.length) return 0;
+        const sorted = [...values].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        if (sorted.length % 2 === 0) {
+            return (sorted[mid - 1] + sorted[mid]) / 2;
+        }
+        return sorted[mid];
+    };
+
+    // Firmware bisa kirim timestamp time-only "HH:MM:SS.mmm" (tanpa tanggal).
     // new Date("00:22:32") = Invalid Date, jadi prepend tanggal hari ini.
     const parseTs = (s) => {
         const d = new Date(s);
@@ -64,30 +72,20 @@ document.addEventListener('DOMContentLoaded', async function () {
             +m[1], +m[2], +m[3], +String(m[4] || '0').padEnd(3, '0'));
     };
 
-    const median = (values) => {
-        if (!values.length) return 0;
-        const sorted = [...values].sort((a, b) => a - b);
-        const mid = Math.floor(sorted.length / 2);
-        if (sorted.length % 2 === 0) {
-            return (sorted[mid - 1] + sorted[mid]) / 2;
-        }
-        return sorted[mid];
-    };
-
     const getLayout = (yLabel) => ({
         paper_bgcolor: 'rgba(0,0,0,0)',
         plot_bgcolor: 'rgba(0,0,0,0)',
         margin: { t: 30, r: 20, b: 60, l: 70 },
         showlegend: false,
         xaxis: {
-            gridcolor: cssVar('--color-surface-container'),
-            tickfont: { color: cssVar('--color-outline'), family: 'JetBrains Mono', size: 9 },
-            linecolor: cssVar('--color-outline-variant'),
+            gridcolor: cssVar('--border'),
+            tickfont: { color: cssVar('--navy-soft'), family: 'Inter', size: 9 },
+            linecolor: cssVar('--border'),
             autorange: true,
             type: 'date',
             title: {
                 text: 'Time',
-                font: { size: 11, color: cssVar('--color-outline'), family: 'Inter', weight: 600 },
+                font: { size: 11, color: cssVar('--navy-soft'), family: 'Inter', weight: 600 },
                 standoff: 20
             },
             tickformatstops: [
@@ -102,21 +100,57 @@ document.addEventListener('DOMContentLoaded', async function () {
             ]
         },
         yaxis: {
-            gridcolor: cssVar('--color-surface-container'),
-            tickfont: { color: cssVar('--color-outline'), family: 'JetBrains Mono', size: 9 },
-            linecolor: cssVar('--color-outline-variant'),
-            zerolinecolor: cssVar('--color-outline-variant'),
+            gridcolor: cssVar('--border'),
+            tickfont: { color: cssVar('--navy-soft'), family: 'Inter', size: 9 },
+            linecolor: cssVar('--border'),
+            zerolinecolor: cssVar('--border'),
             title: {
                 text: yLabel,
-                font: { size: 11, color: cssVar('--color-outline'), family: 'Inter', weight: 600 },
+                font: { size: 11, color: cssVar('--navy-soft'), family: 'Inter', weight: 600 },
                 standoff: 15
             }
         },
         hovermode: 'x unified',
         hoverlabel: {
-            bgcolor: cssVar('--color-surface-container-low'),
-            bordercolor: cssVar('--color-outline-variant'),
-            font: { color: cssVar('--color-on-surface'), size: 10 }
+            bgcolor: cssVar('--card-alt'),
+            bordercolor: cssVar('--border'),
+            font: { color: cssVar('--navy'), size: 10 }
+        }
+    });
+
+    const getFddLayout = () => ({
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        margin: { t: 30, r: 20, b: 60, l: 70 },
+        showlegend: false,
+        xaxis: {
+            gridcolor: cssVar('--border'),
+            tickfont: { color: cssVar('--navy-soft'), family: 'Inter', size: 9 },
+            linecolor: cssVar('--border'),
+            autorange: true,
+            title: {
+                text: 'Frequency (Hz)',
+                font: { size: 11, color: cssVar('--navy-soft'), family: 'Inter', weight: 600 },
+                standoff: 20
+            }
+        },
+        yaxis: {
+            gridcolor: cssVar('--border'),
+            tickfont: { color: cssVar('--navy-soft'), family: 'Inter', size: 9 },
+            linecolor: cssVar('--border'),
+            zerolinecolor: cssVar('--border'),
+            autorange: true,
+            title: {
+                text: 'Singular Value (λ₁)',
+                font: { size: 11, color: cssVar('--navy-soft'), family: 'Inter', weight: 600 },
+                standoff: 15
+            }
+        },
+        hovermode: 'closest',
+        hoverlabel: {
+            bgcolor: cssVar('--card-alt'),
+            bordercolor: cssVar('--border'),
+            font: { color: cssVar('--navy'), size: 10 }
         }
     });
 
@@ -189,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     name: 'Node 01',
                     type: 'scatter',
                     mode: 'lines',
-                    line: { color: '#4cd7f6', width: 2, shape: 'spline' }
+                    line: { color: COLOR_N1(), width: 2, shape: 'spline' }
                 },
                 {
                     x: node2Points.map((point) => point.x),
@@ -197,12 +231,20 @@ document.addEventListener('DOMContentLoaded', async function () {
                     name: 'Node 02',
                     type: 'scatter',
                     mode: 'lines',
-                    line: { color: '#ffb95f', width: 2, shape: 'spline' }
+                    line: { color: COLOR_N2(), width: 2, shape: 'spline' }
                 }
             ], getLayout(metric.yLabel), chartConfig);
 
+            // RTC device tidak bisa dipercaya (loncat/jam mundur) → anchor jendela ke jam klien.
+            scrollWindow(metric.plotId, new Date());
+
             updateStats(metric.statKey);
         });
+    }
+
+    function scrollWindow(plotId, t) {
+        const end = t instanceof Date ? t : new Date(t);
+        Plotly.relayout(plotId, { 'xaxis.range': [new Date(end - WINDOW_MS), end] });
     }
 
     function handleLivePayload(payload) {
@@ -211,10 +253,18 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
         const traceIndex = TRACE_INDEX[nodeId];
-        const timestamp = parseTs(payload.timestamp) || new Date();
+        // RTC device bisa salah/drift → pakai waktu kedatangan klien biar grafik selalu scroll "sekarang".
+        const timestamp = new Date();
+        // Payload live MQTT nested (vibration.rms, tilt.pitch/roll), sedangkan
+        // getValue mengekspektasikan bentuk flat row DB → ratakan dulu.
+        const reading = {
+            rms: payload.vibration && payload.vibration.rms,
+            pitch: payload.tilt && payload.tilt.pitch,
+            roll: payload.tilt && payload.tilt.roll,
+        };
 
         metricConfigs.forEach((metric) => {
-            const value = toNumber(metric.getValue(payload));
+            const value = toNumber(metric.getValue(reading));
             if (value === null) {
                 return;
             }
@@ -227,6 +277,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             pushReadingToSeries(metric, nodeId, value);
             updatePeak(metric, nodeId, value);
             updateStats(metric.statKey);
+            scrollWindow(metric.plotId, timestamp);
         });
     }
 
@@ -237,8 +288,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.error('[Analysis] Failed to load initial data', error);
         metricConfigs.forEach((metric) => {
             Plotly.newPlot(metric.plotId, [
-                { x: [], y: [], name: 'Node 01', type: 'scatter', mode: 'lines', line: { color: '#4cd7f6', width: 2 } },
-                { x: [], y: [], name: 'Node 02', type: 'scatter', mode: 'lines', line: { color: '#ffb95f', width: 2 } }
+                { x: [], y: [], name: 'Node 01', type: 'scatter', mode: 'lines', line: { color: COLOR_N1(), width: 2 } },
+                { x: [], y: [], name: 'Node 02', type: 'scatter', mode: 'lines', line: { color: COLOR_N2(), width: 2 } }
             ], getLayout(metric.yLabel), chartConfig);
             updateStats(metric.statKey);
         });
@@ -246,7 +297,105 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     window.addEventListener('themechange', () => {
         metricConfigs.forEach((metric) => Plotly.relayout(metric.plotId, getLayout(metric.yLabel)));
+        const plotFdd = document.getElementById('plot-fdd');
+        if (plotFdd && fddPlotInitialized) {
+            Plotly.relayout('plot-fdd', getFddLayout());
+        }
     });
+
+    let fddPlotInitialized = false;
+
+    async function renderFdd() {
+        const plotEl = document.getElementById('plot-fdd');
+        const pairEl = document.getElementById('fdd-pair');
+        const domEl = document.getElementById('fdd-dom-freq');
+        const peaksEl = document.getElementById('fdd-peaks-summary');
+        const winRateEl = document.getElementById('fdd-window-rate');
+        if (!plotEl) return;
+
+        let rows = [];
+        try { rows = await api('/api/fdd?limit=1'); } catch (_) { }
+        rows = Array.isArray(rows) ? rows : [];
+        const r = rows[0];
+
+        if (!r) {
+            if (!fddPlotInitialized) {
+                Plotly.newPlot('plot-fdd', [{
+                    x: [0, 20, 40, 60, 80, 100],
+                    y: [0, 0, 0, 0, 0, 0],
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: cssVar('--border'), dash: 'dash', width: 1.5 },
+                    hoverinfo: 'none'
+                }], getFddLayout(), chartConfig);
+                fddPlotInitialized = true;
+            }
+            if (domEl) domEl.textContent = '-- Hz';
+            if (pairEl) pairEl.textContent = '--';
+            if (peaksEl) peaksEl.textContent = '--';
+            if (winRateEl) winRateEl.textContent = '--';
+            return;
+        }
+
+        if (domEl) domEl.textContent = `${Number(r.dominant_freq || 0).toFixed(2)} Hz`;
+        if (pairEl) pairEl.textContent = `${r.node_id_a} / ${r.node_id_b}`;
+        if (winRateEl) winRateEl.textContent = `${r.window_size || 256} / ${r.sampling_rate || 200}Hz`;
+
+        let peaks = [];
+        try { peaks = JSON.parse(r.peaks_json || '[]'); } catch (_) { }
+        peaks = Array.isArray(peaks) ? peaks : [];
+
+        if (peaksEl) {
+            peaksEl.textContent = peaks.length
+                ? peaks.map(p => `${Number(p.freq).toFixed(1)}Hz`).join(', ')
+                : 'Tidak ada peak';
+        }
+
+        let spectrum = null;
+        try { if (r.spectrum_json) spectrum = JSON.parse(r.spectrum_json); } catch (_) { }
+
+        let freqs = spectrum?.freqs;
+        let eigenvalues = spectrum?.eigenvalues;
+
+        // Fallback jika spectrum_json belum tersimpan: plot garis dari titik-titik puncak
+        if (!Array.isArray(freqs) || !Array.isArray(eigenvalues) || freqs.length === 0) {
+            freqs = [0, Number(r.dominant_freq || 0), (r.sampling_rate || 200) / 2];
+            eigenvalues = [0, peaks[0]?.eigenvalue || 1, 0];
+        }
+
+        const traces = [
+            {
+                x: freqs,
+                y: eigenvalues,
+                name: '1st Singular Value (λ₁)',
+                type: 'scatter',
+                mode: 'lines',
+                line: { color: COLOR_N1(), width: 2, shape: 'spline' },
+                hovertemplate: '%{x:.2f} Hz: %{y:.4f}<extra></extra>'
+            }
+        ];
+
+        if (peaks.length > 0) {
+            traces.push({
+                x: peaks.map(p => p.freq),
+                y: peaks.map(p => p.eigenvalue),
+                name: 'Modal Peak',
+                type: 'scatter',
+                mode: 'markers+text',
+                marker: { color: '#E5674A', size: 9, symbol: 'diamond' },
+                text: peaks.map(p => `${Number(p.freq).toFixed(1)}Hz`),
+                textposition: 'top center',
+                textfont: { family: 'Inter', size: 9.5, color: cssVar('--navy'), weight: 700 },
+                hovertemplate: 'Peak: %{x:.2f} Hz (%{y:.4f})<extra></extra>'
+            });
+        }
+
+        Plotly.react('plot-fdd', traces, getFddLayout(), chartConfig);
+        fddPlotInitialized = true;
+    }
+
+    renderFdd();
+    setInterval(renderFdd, 10000);
 
     connectWS(handleLivePayload);
 
@@ -257,5 +406,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 'yaxis.autorange': true
             });
         });
+        const plotFdd = document.getElementById('plot-fdd');
+        if (plotFdd && fddPlotInitialized) {
+            Plotly.relayout('plot-fdd', {
+                'xaxis.autorange': true,
+                'yaxis.autorange': true
+            });
+        }
     });
 });

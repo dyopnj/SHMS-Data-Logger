@@ -6,6 +6,7 @@ const config: AppConfig = {
   http_port: parseInt(process.env.HTTP_PORT || '3000', 10),
   db_path: process.env.DB_PATH || './data.db',
   node_ids: (process.env.NODE_IDS || 'node_01,node_02').split(','),
+  retention_days: parseInt(process.env.DATA_RETENTION_DAYS || '30', 10),
 };
 
 export default config;

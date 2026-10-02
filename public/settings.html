@@ -1,230 +1,288 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="assets/style.css">
-<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SHMS - Settings</title>
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="bg-background text-on-background font-body-md antialiased">
-<div id="sidebar"></div>
-<main class="ml-[260px] flex-1 min-h-screen">
-<div id="header"></div>
-<div class="p-margin-desktop space-y-gutter">
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-  <div>
-    <h1 class="font-headline-md text-headline-md font-bold text-on-background">System Configuration</h1>
-    <p class="text-on-surface-variant font-body-md mt-1">Manage node telemetry parameters, alarm thresholds, and network connectivity settings.</p>
-  </div>
-  <div class="flex gap-4">
-    <button class="px-6 py-2 border border-outline text-on-surface-variant rounded-lg hover:bg-surface-variant transition-colors flex items-center gap-2">
-      <span class="material-symbols-outlined text-[20px]">restart_alt</span>
-      <span>Reset to Default</span>
-    </button>
-    <button id="btn-save-all" class="px-6 py-2 bg-primary text-on-primary font-bold rounded-lg hover:shadow-[0_0_15px_rgba(76,215,246,0.4)] transition-all active:scale-95 flex items-center gap-2">
-      <span class="material-symbols-outlined text-[20px]">save</span>
-      <span>Save Changes</span>
-    </button>
-  </div>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/logoremoved.png" alt="SHMS" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">Bridge Monitor</span>
+        <span class="brand-sub"><i class="dot dot-active"></i><span id="nodeStatus">NODE STATUS: ACTIVE</span></span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="home.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="analysis.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 8-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Analysis</span>
+      </a>
+      <a href="logs.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="8" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Logs</span>
+      </a>
+      <a href="settings.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a href="logs.html" class="btn-export">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Export Report
+      </a>
+      <a href="index.html" class="link-logout">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>System Configuration</h1>
+        <p class="page-sub">Atur parameter telemetri node, ambang alarm, dan koneksi jaringan.</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-secondary" id="btn-reset">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 1 3 6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Reset to Default
+        </button>
+        <button id="btn-save-all" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          Save Changes
+        </button>
+        <button class="icon-btn" id="themeToggle" aria-label="Theme toggle" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="settings-grid">
+
+      <!-- LEFT: Node Parameters -->
+      <div class="settings-col">
+
+        <!-- Node 01 -->
+        <article class="card section-card">
+          <div class="section-title" style="justify-content: space-between; display:flex;">
+            <span style="display:flex; align-items:center; gap:10px;">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M2 8.5a15 15 0 0120 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 12a10 10 0 0113 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 15.5a5 5 0 016 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
+              Node Parameters
+            </span>
+            <span class="node-chip">ID: NODE-BRG-01</span>
+            <span class="node-chip" id="cfgSync0" style="margin-left:6px; font-weight:700;">Applied</span>
+          </div>
+
+          <div class="two-col">
+            <div class="field">
+              <label class="field-label" for="samplingRate0">Sampling Rate (Hz) <span id="statusRate0" class="field-cfg-badge"></span></label>
+              <select id="samplingRate0" class="field-select">
+                <option value="50">50 Hz</option>
+                <option value="100">100 Hz</option>
+                <option value="150">150 Hz</option>
+                <option value="200" selected>200 Hz</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Sensitivity Gain <span id="statusGain0" class="field-cfg-badge"></span></label>
+              <div class="gain-row" id="gain0">
+                <button type="button" class="gain-btn" data-gain="1">1x</button>
+                <button type="button" class="gain-btn" data-gain="2">2x</button>
+                <button type="button" class="gain-btn" data-gain="4">4x</button>
+                <button type="button" class="gain-btn" data-gain="8">8x</button>
+              </div>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+              <label class="field-label" for="rawWindowInterval0">Raw Window Interval (FFT / FDD) <span id="statusRaw0" class="field-cfg-badge"></span></label>
+              <select id="rawWindowInterval0" class="field-select">
+                <option value="10000">10 s</option>
+                <option value="15000">15 s</option>
+                <option value="20000">20 s</option>
+                <option value="30000">30 s</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-recal-0" class="btn-secondary btn-block" style="margin-top:18px;">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 1 3 6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Zeroing / Recalibrate
+          </button>
+        </article>
+
+        <!-- Node 02 -->
+        <article class="card section-card">
+          <div class="section-title" style="justify-content: space-between; display:flex;">
+            <span style="display:flex; align-items:center; gap:10px;">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M2 8.5a15 15 0 0120 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 12a10 10 0 0113 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 15.5a5 5 0 016 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
+              Node Parameters
+            </span>
+            <span class="node-chip">ID: NODE-BRG-02</span>
+            <span class="node-chip" id="cfgSync1" style="margin-left:6px; font-weight:700;">Applied</span>
+          </div>
+
+          <div class="two-col">
+            <div class="field">
+              <label class="field-label" for="samplingRate1">Sampling Rate (Hz) <span id="statusRate1" class="field-cfg-badge"></span></label>
+              <select id="samplingRate1" class="field-select">
+                <option value="50">50 Hz</option>
+                <option value="100">100 Hz</option>
+                <option value="150">150 Hz</option>
+                <option value="200" selected>200 Hz</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label">Sensitivity Gain <span id="statusGain1" class="field-cfg-badge"></span></label>
+              <div class="gain-row" id="gain1">
+                <button type="button" class="gain-btn" data-gain="1">1x</button>
+                <button type="button" class="gain-btn" data-gain="2">2x</button>
+                <button type="button" class="gain-btn" data-gain="4">4x</button>
+                <button type="button" class="gain-btn" data-gain="8">8x</button>
+              </div>
+            </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+              <label class="field-label" for="rawWindowInterval1">Raw Window Interval (FFT / FDD) <span id="statusRaw1" class="field-cfg-badge"></span></label>
+              <select id="rawWindowInterval1" class="field-select">
+                <option value="10000">10 s</option>
+                <option value="15000">15 s</option>
+                <option value="20000">20 s</option>
+                <option value="30000">30 s</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-recal-1" class="btn-secondary btn-block" style="margin-top:18px;">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 1 3 6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Zeroing / Recalibrate
+          </button>
+        </article>
+
+      </div>
+
+      <!-- RIGHT: Connectivity + Thresholds -->
+      <div class="settings-col">
+
+        <article class="card section-card">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="4" height="10" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="10" y="5" width="4" height="15" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="17" y="13" width="4" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span>System Connectivity</span>
+          </div>
+
+          <div class="field" style="margin-bottom:14px;">
+            <label class="field-label" for="serverIp">Server IP Address</label>
+            <input id="serverIp" type="text" readonly class="field-input field-mono">
+          </div>
+
+          <div class="field" style="margin-bottom:16px;">
+            <label class="field-label" for="mqttBroker">MQTT Broker</label>
+            <input id="mqttBroker" type="text" readonly class="field-input field-mono">
+          </div>
+
+          <div class="field" style="margin-bottom:16px;">
+            <label class="field-label">Node WiFi</label>
+            <div class="status-line" style="margin-top:8px;">
+              <div class="status-line-left">
+                <div>
+                  <p class="toggle-row-title" id="wifiNode0">node_01 — belum ada data</p>
+                </div>
+              </div>
+            </div>
+            <div class="status-line" style="margin-top:8px;">
+              <div class="status-line-left">
+                <div>
+                  <p class="toggle-row-title" id="wifiNode1">node_02 — belum ada data</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-line">
+            <div class="status-line-left">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M2 8.5a15 15 0 0120 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5.5 12a10 10 0 0113 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 15.5a5 5 0 016 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg>
+              <div>
+                <p class="toggle-row-title">MQTT Connection</p>
+                <p class="toggle-row-sub">Bridge to data logger</p>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="mqttLed" class="status-led offline"></span>
+              <span id="mqttStatus" class="status-text offline">DISCONNECTED</span>
+            </div>
+          </div>
+
+          <div class="export-row" style="margin-top:16px;">
+            <button id="btn-request-status" class="btn-secondary" style="flex:1;">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              Request Status
+            </button>
+            <button id="btn-restart" class="btn-secondary" style="flex:1;">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 1 3 6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Restart Nodes
+            </button>
+          </div>
+        </article>
+
+        <article class="card section-card">
+          <div class="section-title section-title-error">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 18a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            <span>Alert Thresholds</span>
+          </div>
+
+          <div class="field" style="margin-bottom:14px;">
+            <label class="field-label" for="th-vibration">Vibration Threshold</label>
+            <div class="field-unit">
+              <input id="th-vibration" type="number" step="0.1" value="0.5" class="field-input field-mono">
+              <span class="field-unit-label">m/s²</span>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:18px;">
+            <label class="field-label" for="th-tilt">Tilt Threshold</label>
+            <div class="field-unit">
+              <input id="th-tilt" type="number" step="0.1" value="2.0" class="field-input field-mono">
+              <span class="field-unit-label">°</span>
+            </div>
+          </div>
+
+          <button id="btn-save-threshold" class="btn-primary btn-block">Simpan Threshold</button>
+        </article>
+
+      </div>
+    </div>
+
+    <footer class="page-footer">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>
+      2026 SHMS &nbsp;|&nbsp; SIMON BATAPA PROFESSIONAL SERIES
+    </footer>
+
+  </main>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-  <!-- Left: Node Parameters -->
-  <div class="md:col-span-8 space-y-gutter">
-    <!-- Node 01 -->
-    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl active-glow">
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-primary">sensors</span>
-          <h3 class="font-headline-lg text-headline-lg">Node Parameters</h3>
-        </div>
-        <div class="px-3 py-1 bg-surface-container-high rounded border border-outline-variant">
-          <span class="font-label-mono text-label-mono text-secondary">ID: NODE-BRG-01</span>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="space-y-4">
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
-            <select id="samplingRate0" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
-              <option value="50">50 Hz</option>
-              <option value="100">100 Hz</option>
-              <option value="150">150 Hz</option>
-              <option value="250">250 Hz</option>
-              <option value="300">300 Hz</option>
-              <option value="350">350 Hz</option>
-              <option value="400">400 Hz</option>
-              <option value="450">450 Hz</option>
-              <option value="500" selected>500 Hz</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
-            <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
-              <option>16-bit Integer</option>
-              <option selected>32-bit Float</option>
-              <option>64-bit Double</option>
-            </select>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sensitivity Gain</label>
-            <div class="flex gap-2">
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">1x</button>
-              <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg font-bold">2x</button>
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">4x</button>
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">8x</button>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
-            <div>
-              <p class="font-body-md font-bold">Auto-Calibration</p>
-              <p class="text-[12px] text-on-surface-variant">Periodic sensor re-zeroing</p>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked class="sr-only peer">
-              <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[""] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Node 02 -->
-    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl active-glow">
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-primary">sensors</span>
-          <h3 class="font-headline-lg text-headline-lg">Node Parameters</h3>
-        </div>
-        <div class="px-3 py-1 bg-surface-container-high rounded border border-outline-variant">
-          <span class="font-label-mono text-label-mono text-secondary">ID: NODE-BRG-02</span>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="space-y-4">
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sampling Rate (Hz)</label>
-            <select id="samplingRate1" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
-              <option value="50">50 Hz</option>
-              <option value="100">100 Hz</option>
-              <option value="150">150 Hz</option>
-              <option value="250">250 Hz</option>
-              <option value="300">300 Hz</option>
-              <option value="350">350 Hz</option>
-              <option value="400">400 Hz</option>
-              <option value="450">450 Hz</option>
-              <option value="500" selected>500 Hz</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Data Precision</label>
-            <select class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 text-on-background focus:ring-1 focus:ring-primary outline-none">
-              <option>16-bit Integer</option>
-              <option selected>32-bit Float</option>
-              <option>64-bit Double</option>
-            </select>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <div>
-            <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Sensitivity Gain</label>
-            <div class="flex gap-2">
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">1x</button>
-              <button class="flex-1 py-2 border border-primary bg-primary/10 text-primary rounded-lg font-bold">2x</button>
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">4x</button>
-              <button class="flex-1 py-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant">8x</button>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
-            <div>
-              <p class="font-body-md font-bold">Auto-Calibration</p>
-              <p class="text-[12px] text-on-surface-variant">Periodic sensor re-zeroing</p>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked class="sr-only peer">
-              <div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[""] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Right: Connectivity + Thresholds -->
-  <div class="md:col-span-4 space-y-gutter">
-    <!-- System Connectivity -->
-    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl relative overflow-hidden group">
-      <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-        <span class="material-symbols-outlined text-[120px]">lan</span>
-      </div>
-      <div class="flex items-center gap-3 mb-6 relative">
-        <span class="material-symbols-outlined text-primary">activity_zone</span>
-        <h3 class="font-headline-lg text-headline-lg">System Connectivity</h3>
-      </div>
-      <div class="space-y-4 relative">
-        <div>
-          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">Server IP Address</label>
-          <input id="serverIp" type="text" readonly class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background outline-none cursor-default">
-        </div>
-        <div>
-          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-1 uppercase">MQTT Broker</label>
-          <input id="mqttBroker" type="text" readonly class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background outline-none cursor-default">
-        </div>
-        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-outline-variant">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-[20px] text-on-surface-variant">wifi</span>
-            <div>
-              <p class="font-body-md font-bold">MQTT Connection</p>
-              <p class="text-[12px] text-on-surface-variant">Bridge to data logger</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="mqttLed" class="status-led offline"></span>
-            <span id="mqttStatus" class="font-label-mono text-label-mono text-error">DISCONNECTED</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Alert Thresholds -->
-    <div class="bg-surface-container border border-outline-variant p-6 rounded-xl">
-      <div class="flex items-center gap-3 mb-6">
-        <span class="material-symbols-outlined text-error">warning</span>
-        <h3 class="font-headline-lg text-headline-lg">Alert Thresholds</h3>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Vibration Threshold</label>
-          <div class="flex gap-3 items-center">
-            <input id="th-vibration" type="number" step="0.1" value="0.5" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
-            <span class="text-on-surface-variant text-sm">m/s²</span>
-          </div>
-        </div>
-        <div>
-          <label class="block font-label-mono text-label-mono text-on-surface-variant mb-2 uppercase">Tilt Threshold</label>
-          <div class="flex gap-3 items-center">
-            <input id="th-tilt" type="number" step="0.1" value="2.0" class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-2 font-label-mono text-on-background focus:border-primary outline-none">
-            <span class="text-on-surface-variant text-sm">°</span>
-          </div>
-        </div>
-        <button id="btn-save-threshold" class="w-full bg-primary text-on-primary font-bold py-2 rounded-lg hover:opacity-90 transition-all">Simpan Threshold</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-<footer class="px-margin-desktop py-6 text-center">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
-</footer>
-</main>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/settings.js"></script>
 </body>

@@ -63,7 +63,7 @@ try {
         fontFamily: {
           "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"],
           "headline-md": ["Inter"], "display": ["Inter"],
-          "body-md": ["Inter"], "label-mono": ["JetBrains Mono"], "body-lg": ["Inter"]
+          "body-md": ["Inter"], "label-mono": ["Inter"], "body-lg": ["Inter"]
         },
         fontSize: {
           "headline-lg": ["24px", { lineHeight: "32px", fontWeight: "600" }],

@@ -1,67 +1,23 @@
 // ============================================
-// SHARED — header, sidebar, WebSocket helper
+// SHARED — theme toggle, node status, helpers
 // ============================================
 
-// Render header (judul + status + theme toggle + profile)
-function renderHeader() {
-    const el = document.getElementById('header');
-    if (!el) return;
-    const theme = localStorage.getItem('theme') || 'dark';
-    el.innerHTML = `
-<header class="sticky top-0 z-30 flex shrink-0 justify-between items-center w-full px-margin-desktop h-16 bg-background border-b border-outline-variant">
-  <span class="font-headline-md font-bold text-primary">SHMS - SIMON BATAPA 2026</span>
-  <div class="flex items-center gap-3">
-    <span class="status-led online"></span>
-    <span class="font-label-mono text-label-mono text-secondary">LIVE</span>
-    <button id="themeToggle" class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container-high hover:bg-surface-variant border border-outline-variant transition-colors" title="Toggle theme">
-      <span class="material-symbols-outlined text-[20px] text-on-surface-variant">${theme === 'dark' ? 'dark_mode' : 'light_mode'}</span>
-    </button>
-    <a href="profile.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container-high hover:bg-surface-variant border border-outline-variant transition-colors" title="Profile">
-      <span class="material-symbols-outlined text-[20px] text-on-surface-variant">person</span>
-    </a>
-  </div>
-</header>`;
-    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+const SUN_ICON = '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+const MOON_ICON = '<svg viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+
+// Terapkan tema ke <html> + ikon tombol
+function applyTheme(t) {
+    const dark = t === 'dark';
+    document.documentElement.classList.toggle('dark', dark);
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.innerHTML = dark ? MOON_ICON : SUN_ICON;
 }
 
-// Toggle dark/light mode
 function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    const icon = document.querySelector('#themeToggle .material-symbols-outlined');
-    if (icon) icon.textContent = isDark ? 'dark_mode' : 'light_mode';
+    const t = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    localStorage.setItem('theme', t);
+    applyTheme(t);
     window.dispatchEvent(new CustomEvent('themechange'));
-}
-
-// Render sidebar (nav menu + logout)
-function renderSidebar() {
-    const el = document.getElementById('sidebar');
-    if (!el) return;
-    el.innerHTML = `
-<aside class="sidebar fixed left-0 top-0 h-full flex flex-col p-4 z-40 bg-surface-container-low border-r border-outline-variant w-sidebar-width">
-<div class="mb-6 px-2 flex items-center gap-3">
-  <img src="assets/js/logo.png" alt="SHMS" class="w-10 h-10 rounded-lg">
-  <div>
-    <h1 class="font-headline-md font-bold text-primary">Bridge Monitor</h1>
-    <p id="nodeStatus" class="text-secondary font-label-mono uppercase tracking-widest text-[10px]">NODE STATUS: ACTIVE</p>
-  </div>
-</div>
-<nav class="space-y-2 flex-1">
-  <a href="home.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">dashboard</span><span class="nav-text font-body-md">Home</span></a>
-  <a href="analysis.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">show_chart</span><span class="nav-text font-body-md">Analysis</span></a>
-  <a href="logs.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">database</span><span class="nav-text font-body-md">Logs</span></a>
-  <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg"><span class="material-symbols-outlined">settings</span><span class="nav-text font-body-md">Settings</span></a>
-</nav>
-<div class="mt-auto flex flex-col gap-2 pt-4 border-t border-outline-variant">
-  <a href="logs.html" class="flex items-center justify-center gap-2 bg-primary text-on-primary font-bold py-2 rounded-lg hover:opacity-90 active:scale-95 transition-all text-sm">
-    <span class="material-symbols-outlined text-[18px]">download</span> Export Report
-  </a>
-  <a href="index.html" class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all text-sm">
-    <span class="material-symbols-outlined">logout</span><span class="nav-text font-body-md">Logout</span>
-  </a>
-</div>
-</aside>`;
 }
 
 // Sync node status dari MQTT connection
@@ -74,36 +30,30 @@ async function syncNodeStatus() {
     } catch (_) { }
 }
 
-// Highlight sidebar sesuai halaman aktif
 document.addEventListener('DOMContentLoaded', function () {
-    renderSidebar();
-    renderHeader();
+    applyTheme(localStorage.getItem('theme') || 'dark');
+    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
     syncNodeStatus();
     setInterval(syncNodeStatus, 10000);
-    const page = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('aside nav a, .sidebar nav a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === page) {
-            link.classList.add('bg-secondary-container', 'text-on-secondary-container');
-            link.classList.remove('text-on-surface-variant');
-        }
-    });
 });
 
-// WebSocket helper — returns { ws, onData(cb) }
+// WebSocket helper — reconnect otomatis biar tab pulih setelah backend restart
 function connectWS(onData) {
-    const ws = new WebSocket(`ws://${location.host}`);
-    ws.onmessage = e => {
-        try {
-            const msg = JSON.parse(e.data);
-            if (msg.type === 'data') onData(msg.payload);
-        } catch (_) { }
+    let ws;
+    const open = () => {
+        ws = new WebSocket(`ws://${location.host}`);
+        ws.onmessage = e => {
+            try {
+                const msg = JSON.parse(e.data);
+                if (msg.type === 'data') onData(msg.payload);
+            } catch (_) { }
+        };
+        ws.onclose = () => {
+            document.querySelectorAll('.status-led').forEach(el => el.classList.add('offline'));
+            setTimeout(open, 3000);
+        };
     };
-    ws.onclose = () => {
-        document.querySelectorAll('.status-led').forEach(el => {
-            el.className = 'status-led offline';
-        });
-    };
+    open();
     return ws;
 }
 

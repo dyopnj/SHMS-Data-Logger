@@ -1,95 +1,201 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="assets/js/tailwind-config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHMS - Analysis</title>
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-<link rel="icon" type="image/png" href="/assets/js/logo.png">
-<title>SHMS - Analysis</title>
 </head>
-<body class="bg-background text-on-background font-body-md antialiased">
-<div id="sidebar"></div>
-<main class="ml-[260px] flex-1 min-h-screen">
-<div id="header"></div>
-<div class="p-margin-desktop">
-<div class="h-14 flex items-center justify-between mb-4">
-  <div class="flex items-center gap-4">
-    <h1 class="font-headline-md text-headline-md text-on-surface">Structural Analysis Dashboard</h1>
-    <span class="px-2 py-0.5 bg-primary-container/20 text-primary text-[10px] font-bold rounded border border-primary/30 uppercase tracking-widest">Multi-Sensor Feed</span>
-  </div>
-  <div class="flex items-center gap-6">
-    <div class="flex items-center gap-4 text-[11px] font-label-mono">
-      <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-primary"></span><span class="text-on-surface">Node 01</span></span>
-      <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-tertiary"></span><span class="text-on-surface">Node 02</span></span>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/logoremoved.png" alt="SHMS" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">Bridge Monitor</span>
+        <span class="brand-sub"><i class="dot dot-active"></i><span id="nodeStatus">NODE STATUS: ACTIVE</span></span>
+      </div>
     </div>
-    <div class="flex items-center gap-1 bg-surface-container-highest p-1 rounded-lg">
-      <button class="text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-all rounded h-8 w-8 flex items-center justify-center" id="btn-reset-all" title="Reset All Layouts">
-        <span class="material-symbols-outlined text-[20px]">restart_alt</span>
-      </button>
+
+    <nav class="nav">
+      <a href="home.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="analysis.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 8-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Analysis</span>
+      </a>
+      <a href="logs.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="8" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Logs</span>
+      </a>
+      <a href="settings.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a href="logs.html" class="btn-export">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Export Report
+      </a>
+      <a href="index.html" class="link-logout">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Logout
+      </a>
     </div>
-  </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Structural Analysis Dashboard</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="legend-pill">
+          <span class="legend-item"><span class="legend-swatch legend-swatch-n1"></span>Node 01</span>
+          <span class="legend-item"><span class="legend-swatch legend-swatch-n2"></span>Node 02</span>
+        </div>
+        <button class="icon-btn" id="btn-reset-all" aria-label="Reset semua layout" title="Reset All Layouts">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 1 3 6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v-4h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="themeToggle" aria-label="Theme toggle" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chart bento grid -->
+    <section class="chart-grid">
+
+      <article class="card chart-card">
+        <div class="card-head">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none"><path d="M2 12h3l2-7 4 14 3-10 2 6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>RMS Vibration</h2>
+        </div>
+        <div class="chart-body" id="plot-accel-x"></div>
+        <div class="chart-stats">
+          <div class="chart-stat">
+            <span class="chart-stat-label">Mean</span>
+            <span class="chart-stat-val" id="stat-accel-x-mean">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Median</span>
+            <span class="chart-stat-val" id="stat-accel-x-median">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Peak</span>
+            <span class="chart-stat-peak">
+              <span class="peak-n1" id="stat-accel-x-peak-n1">0.00</span>
+              <span class="peak-sep">/</span>
+              <span class="peak-n2" id="stat-accel-x-peak-n2">0.00</span>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card chart-card">
+        <div class="card-head">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 8-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>Pitch</h2>
+        </div>
+        <div class="chart-body" id="plot-accel-y"></div>
+        <div class="chart-stats">
+          <div class="chart-stat">
+            <span class="chart-stat-label">Mean</span>
+            <span class="chart-stat-val" id="stat-accel-y-mean">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Median</span>
+            <span class="chart-stat-val" id="stat-accel-y-median">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Peak</span>
+            <span class="chart-stat-peak">
+              <span class="peak-n1" id="stat-accel-y-peak-n1">0.00</span>
+              <span class="peak-sep">/</span>
+              <span class="peak-n2" id="stat-accel-y-peak-n2">0.00</span>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card chart-card">
+        <div class="card-head">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M3 21L21 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+          <h2>Roll</h2>
+        </div>
+        <div class="chart-body" id="plot-accel-z"></div>
+        <div class="chart-stats">
+          <div class="chart-stat">
+            <span class="chart-stat-label">Mean</span>
+            <span class="chart-stat-val" id="stat-accel-z-mean">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Median</span>
+            <span class="chart-stat-val" id="stat-accel-z-median">0.00</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Peak</span>
+            <span class="chart-stat-peak">
+              <span class="peak-n1" id="stat-accel-z-peak-n1">0.00</span>
+              <span class="peak-sep">/</span>
+              <span class="peak-n2" id="stat-accel-z-peak-n2">0.00</span>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card chart-card" id="card-fdd">
+        <div class="card-head" style="justify-content: space-between; display: flex;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none"><path d="M4 20V10M10 20V4M16 20v-7M22 20v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <h2>FDD Singular Value Spectrum</h2>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--orange);">
+            Dominant: <span id="fdd-dom-freq">-- Hz</span>
+          </div>
+        </div>
+        <div class="chart-body" id="plot-fdd"></div>
+        <div class="chart-stats">
+          <div class="chart-stat">
+            <span class="chart-stat-label">Node Pair</span>
+            <span class="chart-stat-val" id="fdd-pair">--</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Identified Peaks</span>
+            <span class="chart-stat-val" id="fdd-peaks-summary">--</span>
+          </div>
+          <div class="chart-stat">
+            <span class="chart-stat-label">Window / Rate</span>
+            <span class="chart-stat-val" id="fdd-window-rate">--</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <footer class="page-footer">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>
+      2026 SHMS &nbsp;|&nbsp; SIMON BATAPA PROFESSIONAL SERIES
+    </footer>
+
+  </main>
 </div>
-<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-  <!-- Accel X -->
-  <div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[480px]">
-    <div class="px-4 py-3 border-b border-outline-variant bg-surface-container-high">
-      <span class="text-sm font-bold text-on-surface tracking-tight">RMS VIBRATION</span>
-    </div>
-    <div class="flex-1 relative" id="plot-accel-x"></div>
-    <div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
-      <div><span class="text-[10px] text-outline uppercase font-bold">Mean</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-x-mean">0.00</span></div>
-      <div class="border-x border-outline-variant/30"><span class="text-[10px] text-outline uppercase font-bold">Median</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-x-median">0.00</span></div>
-      <div><span class="text-[10px] text-outline uppercase font-bold">Peak</span><div class="flex justify-center gap-2 text-xs font-label-mono"><span class="text-primary" id="stat-accel-x-peak-n1">0.00</span><span class="text-outline">/</span><span class="text-tertiary" id="stat-accel-x-peak-n2">0.00</span></div></div>
-    </div>
-  </div>
-  <!-- Accel Y -->
-  <div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[480px]">
-    <div class="px-4 py-3 border-b border-outline-variant bg-surface-container-high">
-      <span class="text-sm font-bold text-on-surface tracking-tight">PITCH</span>
-    </div>
-    <div class="flex-1 relative" id="plot-accel-y"></div>
-    <div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
-      <div><span class="text-[10px] text-outline uppercase font-bold">Mean</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-y-mean">0.00</span></div>
-      <div class="border-x border-outline-variant/30"><span class="text-[10px] text-outline uppercase font-bold">Median</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-y-median">0.00</span></div>
-      <div><span class="text-[10px] text-outline uppercase font-bold">Peak</span><div class="flex justify-center gap-2 text-xs font-label-mono"><span class="text-primary" id="stat-accel-y-peak-n1">0.00</span><span class="text-outline">/</span><span class="text-tertiary" id="stat-accel-y-peak-n2">0.00</span></div></div>
-    </div>
-  </div>
-  <!-- Accel Z -->
-  <div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[480px]">
-    <div class="px-4 py-3 border-b border-outline-variant bg-surface-container-high">
-      <span class="text-sm font-bold text-on-surface tracking-tight">ROLL</span>
-    </div>
-    <div class="flex-1 relative" id="plot-accel-z"></div>
-    <div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
-      <div><span class="text-[10px] text-outline uppercase font-bold">Mean</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-z-mean">0.00</span></div>
-      <div class="border-x border-outline-variant/30"><span class="text-[10px] text-outline uppercase font-bold">Median</span><span class="text-on-surface font-label-mono text-xs" id="stat-accel-z-median">0.00</span></div>
-      <div><span class="text-[10px] text-outline uppercase font-bold">Peak</span><div class="flex justify-center gap-2 text-xs font-label-mono"><span class="text-primary" id="stat-accel-z-peak-n1">0.00</span><span class="text-outline">/</span><span class="text-tertiary" id="stat-accel-z-peak-n2">0.00</span></div></div>
-    </div>
-  </div>
-  <!-- Gyro X -->
-  <div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[480px]">
-    <div class="px-4 py-3 border-b border-outline-variant bg-surface-container-high">
-      <span class="text-sm font-bold text-on-surface tracking-tight">MAGNETIC X</span>
-    </div>
-    <div class="flex-1 relative" id="plot-gyro-x"></div>
-    <div class="px-6 py-3 bg-surface-container-lowest/50 border-t border-outline-variant grid grid-cols-3 text-center">
-      <div><span class="text-[10px] text-outline uppercase font-bold">Mean</span><span class="text-on-surface font-label-mono text-xs" id="stat-gyro-x-mean">0.00</span></div>
-      <div class="border-x border-outline-variant/30"><span class="text-[10px] text-outline uppercase font-bold">Median</span><span class="text-on-surface font-label-mono text-xs" id="stat-gyro-x-median">0.00</span></div>
-      <div><span class="text-[10px] text-outline uppercase font-bold">Peak</span><div class="flex justify-center gap-2 text-xs font-label-mono"><span class="text-primary" id="stat-gyro-x-peak-n1">0.00</span><span class="text-outline">/</span><span class="text-tertiary" id="stat-gyro-x-peak-n2">0.00</span></div></div>
-    </div>
-  </div>
-</div>
-</div>
-<footer class="px-margin-desktop py-6 text-center">
-  <p class="text-on-surface-variant font-label-mono text-[10px] tracking-widest uppercase">© 2026 SHMS | Simon Batapa Professional Series</p>
-</footer>
-</main>
+
 <script src="assets/js/app.js"></script>
 <script src="assets/js/analysis.js"></script>
 </body>

@@ -1,88 +1,94 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SHMS - Login</title>
-  <link rel="icon" type="image/png" href="/assets/js/logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+<script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHMS - Login</title>
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="min-h-screen overflow-hidden font-['Poppins']">
-  <div class="relative min-h-screen w-full overflow-hidden">
-    <img
-      src="/assets/cover.jpg"
-      alt="Cover background"
-      class="absolute inset-0 h-full w-full object-cover"
-    />
+<body>
 
-    <div class="absolute bottom-6 left-6 w-[min(90vw,760px)] px-2 py-2 lg:px-4">
-      <div class="text-2xl font-bold text-amber-500 [text-shadow:_0px_2px_4px_rgb(0_0_0_/_0.45)] sm:text-4xl lg:text-5xl">SHMS SIMON BATAPA 2026</div>
-      <div class="mt-2 text-lg text-amber-500 [text-shadow:_0px_2px_4px_rgb(0_0_0_/_0.45)] sm:text-xl lg:text-2xl">Instrumentation &amp; Control Industry</div>
-    </div>
+<div class="login-page">
 
-    <div class="absolute right-6 top-1/2 w-[min(92vw,510px)] -translate-y-1/2 rounded-[48px] border border-white/30 bg-white/10 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur sm:p-8 lg:p-10">
-      <div class="mx-auto mb-10 h-36 w-56 overflow-hidden rounded-[2rem] bg-white/25 p-2">
-        <img
-          src="/assets/logoremoved.png"
-          alt="SHMS Logo"
-          class="h-full w-full object-contain"
-        />
-      </div>
-
-      <h1 class="text-left text-4xl font-bold leading-tight text-blue-500 [text-shadow:_0px_4px_4px_rgb(0_0_0_/_0.25)] sm:text-5xl">
-        Welcome<br />back....
-      </h1>
-
-      <form id="loginForm" class="mt-12 space-y-5">
-        <label class="sr-only" for="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          name="username"
-          placeholder="Username"
-          value="admin"
-          required
-          class="h-14 w-full rounded-[20px] border-2 border-transparent bg-orange-50 px-8 text-xl text-black transition hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        />
-
-        <label class="sr-only" for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          value="admin123"
-          required
-          class="h-14 w-full rounded-[20px] border-2 border-transparent bg-orange-50 px-8 text-xl text-black transition hover:border-blue-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        />
-
-        <button
-          type="submit"
-          class="h-14 w-full rounded-[20px] bg-blue-500 px-8 text-2xl font-semibold text-orange-50 transition hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-        >
-          Login
-        </button>
-      </form>
-    </div>
+  <!-- Judul di paling atas -->
+  <div class="login-topbar">
+    <h1>SHMS SIMON BATAPA 2026</h1>
   </div>
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
+  <!-- Background dekorasi -->
+  <div class="login-decor">
+    <div class="decor-block decor-block-1"></div>
+    <div class="decor-block decor-block-2"></div>
+    <div class="decor-outline decor-outline-1"></div>
 
-      if (user === 'admin' && pass === 'admin123') {
-        window.location.href = 'home.html';
-        return;
-      }
+    <svg class="decor-squiggle decor-squiggle-1" viewBox="0 0 100 24" fill="none">
+      <path d="M2 18c8-16 16 16 24 0s16 16 24 0 16 16 24 0 16-8 24 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <svg class="decor-squiggle decor-squiggle-2" viewBox="0 0 100 24" fill="none">
+      <path d="M2 6c8 16 16-16 24 0s16-16 24 0 16-16 24 0 16 8 24-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
 
-      alert('Username atau password salah! (gunakan admin/admin123)');
-    });
-  </script>
+    <span class="decor-dot decor-dot-1"></span>
+    <span class="decor-dot decor-dot-2"></span>
+
+  </div>
+
+  <!-- Card login -->
+  <div class="login-card">
+    <h2 class="login-card-title">Operator Login</h2>
+
+    <div class="field login-field">
+      <label class="field-label" for="loginUsername">Username</label>
+      <input id="loginUsername" type="text" class="field-input" placeholder="Masukkan username">
+    </div>
+
+    <div class="field login-field">
+      <label class="field-label" for="loginPassword">Password</label>
+      <div class="password-wrap">
+        <input id="loginPassword" type="password" class="field-input" placeholder="Masukkan password">
+        <button type="button" class="password-toggle" id="togglePassword">Show</button>
+      </div>
+    </div>
+
+    <button id="btnSignIn" class="btn-primary btn-block" style="margin-top: 8px;">Sign In</button>
+
+    <div class="login-divider"><span>Atau</span></div>
+
+    <button id="btnGuest" class="btn-secondary btn-block">Continue as Guest</button>
+  </div>
+
+  <div class="login-footer">
+    2026 SHMS &nbsp;|&nbsp; SIMON BATAPA PROFESSIONAL SERIES
+  </div>
+
+</div>
+
+<script>
+// Toggle show/hide password
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const input = document.getElementById('loginPassword');
+    const isPwd = input.type === 'password';
+    input.type = isPwd ? 'text' : 'password';
+    this.textContent = isPwd ? 'Hide' : 'Show';
+});
+
+// Masuk ke dashboard (login demo, tanpa validasi server)
+document.getElementById('btnSignIn').addEventListener('click', function () {
+    location.href = 'home.html';
+});
+document.getElementById('btnGuest').addEventListener('click', function () {
+    location.href = 'home.html';
+});
+
+// Enter pada form = sign in
+document.getElementById('loginPassword').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') location.href = 'home.html';
+});
+</script>
 </body>
 </html>

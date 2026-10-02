@@ -1,10 +1,43 @@
-// Radix-2 FFT — cukup untuk dominant frequency detection
-export function fft(samples: number[], sampleRate: number): { freq: number; magnitude: number }[] {
-  const n = samples.length;
-  const power = Math.log2(n);
-  if (!Number.isInteger(power)) throw new Error('Panjang harus power of 2');
+// Radix-2 FFT — dominant frequency detection + complex spectrum untuk FDD.
 
-  // Bit-reversal permutation
+export interface ComplexBin {
+  freq: number;
+  re: number;
+  im: number;
+}
+
+export interface MagnitudeBin {
+  freq: number;
+  magnitude: number;
+}
+
+// Hann window (simetris) untuk mengurangi spectral leakage sebelum FFT.
+// w[i] = 0.5 * (1 - cos(2*pi*i / (N-1)))
+export function applyHannWindow(samples: number[]): number[] {
+  const n = samples.length;
+  if (n < 2) return samples.slice();
+  const out = new Array<number>(n);
+  for (let i = 0; i < n; i++) {
+    const w = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (n - 1)));
+    out[i] = samples[i] * w;
+  }
+  return out;
+}
+
+function isPowerOfTwo(n: number): boolean {
+  return Number.isInteger(Math.log2(n));
+}
+
+// FFT kompleks radix-2 (bit-reversal + butterfly). Input diasumsikan real,
+// dikalikan Hann window terlebih dahulu. Return separuh spektrum positif
+// dalam bentuk { freq, re, im } (amplitudo DFT tanpa normalisasi /N).
+export function fftComplex(samples: number[], sampleRate: number): ComplexBin[] {
+  const n = samples.length;
+  if (!isPowerOfTwo(n)) throw new Error('Panjang harus power of 2');
+
+  const windowed = applyHannWindow(samples);
+  const power = Math.log2(n);
+
   const indices = new Array<number>(n);
   for (let i = 0; i < n; i++) indices[i] = i;
   for (let i = 0; i < n; i++) {
@@ -12,7 +45,7 @@ export function fft(samples: number[], sampleRate: number): { freq: number; magn
     if (j > i) { [indices[i], indices[j]] = [indices[j], indices[i]]; }
   }
 
-  const re = indices.map(i => samples[i]);
+  const re = indices.map(i => windowed[i]);
   const im = new Float64Array(n);
 
   for (let len = 2; len <= n; len *= 2) {
@@ -32,14 +65,23 @@ export function fft(samples: number[], sampleRate: number): { freq: number; magn
     }
   }
 
-  // Magnitude spectrum (hanya half positif)
-  const results: { freq: number; magnitude: number }[] = [];
+  const results: ComplexBin[] = [];
   for (let i = 0; i < n / 2; i++) {
-    const magnitude = Math.sqrt(re[i] ** 2 + im[i] ** 2) / n;
-    const freq = (i * sampleRate) / n;
-    results.push({ freq, magnitude });
+    results.push({ freq: (i * sampleRate) / n, re: re[i], im: im[i] });
   }
   return results;
+}
+
+// Spektrum magnitudo (half positif), memakai Hann window. Kompatibel dengan
+// pemanggil lama (fft_results / dominantFrequency).
+export function fft(samples: number[], sampleRate: number): MagnitudeBin[] {
+  const n = samples.length;
+  if (!isPowerOfTwo(n)) throw new Error('Panjang harus power of 2');
+  const spectrum = fftComplex(samples, sampleRate);
+  return spectrum.map(bin => ({
+    freq: bin.freq,
+    magnitude: Math.sqrt(bin.re ** 2 + bin.im ** 2) / n,
+  }));
 }
 
 export function dominantFrequency(samples: number[], sampleRate: number): number {

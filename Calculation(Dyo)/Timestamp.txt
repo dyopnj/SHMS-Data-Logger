@@ -1,0 +1,263 @@
+================================================================================
+DOKUMENTASI PERHITUNGAN WAKTU, JITTER, DAN KUALITAS DATA SENSOR (FR-02)
+Sistem Monitoring Kesehatan Jembatan (SHMS - SIMON BATAPA 2026)
+Penulis / Catatan Teknis: calculation(dyo)
+================================================================================
+
+DAFTAR ISI:
+1. Mengapa Perhitungan Waktu Ini Sangat Penting?
+2. Istilah Dasar dengan Bahasa Sederhana (Awam)
+   - Sampling Rate & Periode Nominal (T_nominal)
+   - Apa itu Jitter? (Analogi Detak Jantung / Kereta Api)
+   - Mengapa Nilai Rata-rata (Average / Mean) Sering Menipu?
+   - Apa itu Median?
+   - Apa itu Persentil: p95 dan p99?
+   - Apa itu Threshold (Ambang Batas Kelulusan)?
+3. Rumus dan Metode Matematis yang Digunakan
+   - 1. Menghitung Jitter / Timing Error (e_i)
+   - 2. Menghitung Persentil (p95 dan p99) dengan Metode Sorting
+   - 3. Menghitung Sampling Rate Aktual
+4. Di Mana Perhitungan Ini Dijalankan? (Server vs ESP32)
+5. Contoh Simulasi Perhitungan Nyata Step-by-Step
+6. Ringkasan Ambang Batas Sesuai Target PRD
+
+================================================================================
+1. MENGAPA PERHITUNGAN WAKTU INI SANGAT PENTING?
+================================================================================
+
+Ketika kita mengukur getaran jembatan rangka (Warren truss) menggunakan sensor
+MPU9250 pada frekuensi 200 Hz, kita bertujuan mendeteksi frekuensi alami jembatan
+lewat rumus matematika Fourier (FFT / Fast Fourier Transform) dan FDD (Frequency
+Domain Decomposition).
+
+Syarat mutlak dari rumus getaran tersebut adalah:
+"Jeda waktu antar-titik pengukuran HARUS KONSISTEN dan SAMA PERSIS."
+
+Bayangkan kamu sedang merekam musik dengan tempo 120 BPM:
+Jika tempo tiba-tiba melompat lambat lalu cepat sendiri, lagu akan terdengar
+fals/rusak. Hal yang sama terjadi pada getaran jembatan: jika jeda pengambilan
+data tidak rata, grafik gelombang akan cacat, dan frekuensi getaran jembatan yang
+terhitung di komputer bisa menjadi palsu/salah.
+
+Oleh karena itu, dibuatlah persyaratan FR-02: sistem wajib membuktikan secara
+ilmiah dan terukur bahwa jeda waktu sensor stabil.
+
+
+================================================================================
+2. ISTILAH DASAR DENGAN BAHASA SEDERHANA (AWAM)
+================================================================================
+
+--- A. SAMPLING RATE & PERIODE NOMINAL (T_nominal) ---
+Sampling Rate adalah seberapa sering sensor mengambil data dalam 1 detik.
+Di sistem kita, sampling rate default adalah 200 Hz (200 kali per detik).
+
+Periode Nominal (T_nominal) adalah jeda waktu ideal antar-sampel:
+  T_nominal = 1 detik / 200 sampel
+            = 0,005 detik
+            = 5.000 mikrodetik (µs)
+            = 5 milidetik (ms)
+
+Artinya: Sensor ESP32 dituntut membaca sensor tepat setiap 5.000 µs sekali.
+
+--- B. APA ITU JITTER? ---
+Jitter adalah ketidaktepatan / penyimpangan jeda waktu nyata terhadap target.
+
+Analogi Sederhana (Jadwal Kereta Api):
+- Target jadwal kereta: tiba tepat setiap 5 menit sekali.
+- Kereta 1 datang menit ke-0.
+- Kereta 2 datang di menit ke-5 lebih 2 detik (+2 detik keterlambatan).
+- Kereta 3 datang di menit ke-9 lebih 55 detik (-5 detik lebih cepat).
+Selisih +2 detik dan -5 detik itulah yang disebut JITTER.
+
+Pada sensor kita:
+- Target jeda = 5.000 µs.
+- Kenyataan jeda = 5.035 µs.
+- Maka Jitter = 5.035 - 5.000 = +35 µs.
+
+--- C. MENGAPA NILAI RATA-RATA (AVERAGE / MEAN) SERING MENIPU? ---
+Di bangku sekolah, kita terbiasa memakai nilai "rata-rata".
+Tetapi dalam rekayasa sinyal waktu-nyata, rata-rata itu BERBAHAYA karena bisa
+menutupi masalah parah!
+
+Contoh Kasus:
+Ada 3 jeda sampel:
+- Sampel A jedanya 4.000 µs (kecepatan 1.000 µs)
+- Sampel B jedanya 6.000 µs (terlambat 1.000 µs)
+- Sampel C jedanya 5.000 µs (tepat)
+
+Jika dihitung rata-ratanya:
+  (4.000 + 6.000 + 5.000) / 3 = 5.000 µs (Tepat sasaran!)
+Secara rata-rata terlihat sempurna (5.000 µs), padahal sinyal aslinya sangat kacau
+karena ada yang telat 1.000 µs dan ada yang kepagian 1.000 µs!
+
+Karena itulah, kita TIDAK memakai rata-rata biasa, melainkan memakai:
+1. Median (Nilai Tengah)
+2. p95 (Persentil 95)
+3. p99 (Persentil 99)
+
+--- D. APA ITU MEDIAN? ---
+Median adalah nilai yang berada tepat di tengah-tengah setelah seluruh data
+diurutkan dari yang terkecil sampai terbesar.
+Median kebal terhadap angka ekstrem (tidak mudah terdistorsi oleh satu gangguan sesaat).
+
+--- E. APA ITU PERSENTIL (p95 DAN p99)? ---
+Persentil adalah batas peringkat nilai.
+
+Analogi Nilai Ujian 100 Siswa:
+Jika kita urutkan nilai ujian dari terendah ke tertinggi:
+- Siswa ke-50 adalah MEDIAN (p50).
+- Siswa ke-95 adalah PERSENTIL 95 (p95).
+  Artinya: 95% dari siswa mendapat nilai sama atau lebih rendah dari angka ini,
+  dan hanya 5% siswa terbaik yang melampauinya.
+
+Dalam Jitter Sensor Getaran:
+Jika terkumpul 1.000 sampel dalam 5 detik:
+- Hitung nilai keterlambatan (jitter) tiap sampel.
+- Urutkan nilai jitter dari terkecil ke terbesar.
+- Cari nilai di urutan ke-95% (posisi data ke-950).
+Nilai pada urutan ke-950 itulah yang disebut "Jitter p95".
+
+Maknanya:
+"95% dari seluruh sampel yang diambil memiliki jitter di bawah angka tersebut!"
+Jika angka p95 adalah 45 µs, berarti 95% data jedanya sangat mulus (hanya meleset
+maksimal 45 µs dari target 5.000 µs).
+
+Sedangkan p99 adalah nilai di urutan ke-99% (posisi ke-990 dari 1.000 data).
+Fungsinya untuk melihat apakah ada gangguan ekstrem (lonjakan sesaat) pada 1% data
+terburuk.
+
+--- F. APA ITU THRESHOLD (AMBANG BATAS)? ---
+Threshold adalah batas toleransi yang ditetapkan untuk menentukan apakah suatu
+alat/sistem dianggap "LOLOS UJI" (Good/Pass) atau "GAGAL / TIDAK AKURAT" (Fail).
+
+
+================================================================================
+3. RUMUS DAN METODE MATEMATIS YANG DIGUNAKAN
+================================================================================
+
+1. RUMUS JITTER / TIMING ERROR (e_i):
+   Untuk setiap sampel ke-i:
+     Interval Aktual: dt_i = t_i - t_{i-1}
+     Timing Error:    e_i  = dt_i - T_nominal
+     Absolute Error:  |e_i| = abs(e_i)
+
+   Di mana:
+     t_i       = timestamp sampel ke-i dalam satuan mikrodetik (µs)
+     T_nominal = 5.000 µs (untuk 200 Hz)
+
+2. METODE PERSENTIL (Nearest-Rank Method):
+   Langkah-langkah:
+   a. Ambil seluruh array nilai absolut error: E = [|e_1|, |e_2|, ..., |e_N|]
+   b. Urutkan array E secara membesar (ascending sort): E_sorted
+   c. Hitung indeks persentil:
+        Indeks p50 (Median) = ceil(0,50 * N) - 1
+        Indeks p95          = ceil(0,95 * N) - 1
+        Indeks p99          = ceil(0,99 * N) - 1
+   d. Nilai p95 = E_sorted[Indeks p95]
+
+3. RUMUS SAMPLING RATE AKTUAL:
+   Untuk memverifikasi apakah benar node mengambil data dengan kecepatan 200 Hz:
+     Rate_aktual = (N - 1) / (t_terakhir - t_pertama)
+
+   Contoh:
+     N = 201 sampel
+     Rentang waktu (t_201 - t_1) = 1.000.500 µs = 1,0005 detik
+     Rate_aktual = (201 - 1) / 1,0005 = 200 / 1,0005 = 199,90 Hz.
+
+
+================================================================================
+4. DI MANA PERHITUNGAN INI DIJALANKAN? (SERVER vs ESP32)
+================================================================================
+
+Perhitungan ini DIJALANKAN DI SERVER BACKEND, bukan di mikrokontroler ESP32!
+
+Alasannya:
+1. Menghitung persentil membutuhkan penyimpanan array besar (ribuan angka) dan
+   proses pengurutan (Sorting - O(N log N)).
+2. ESP32 memiliki RAM terbatas dan sedang sibuk membaca sensor 200 kali per detik.
+   Jika ESP32 dipaksa menyortir ribuan angka, CPU ESP32 akan macet dan memicu
+   restart Task Watchdog.
+3. ESP32 hanya bertugas ringan: membaca waktu perangkat keras internal lewat
+   fungsi micros() saat sensor MPU dibaca, lalu memasukkannya ke payload JSON.
+4. Server (Laptop / Mini PC) memiliki prosesor bertenaga tinggi dan memori besar,
+   sehingga mampu menghitung persentil jutaan sampel dalam hitungan milidetik
+   tanpa membebani ESP32.
+
+
+================================================================================
+5. CONTOH SIMULASI PERHITUNGAN NYATA STEP-BY-STEP
+================================================================================
+
+Misalkan dalam pengujian kecil terkumpul 20 sampel (N = 20) dengan target 200 Hz
+(T_nominal = 5.000 µs).
+
+Langkah 1: Selisih Waktu Aktual (dt) dan Error Absolut (|e|)
+-------------------------------------------------------------------------
+Sampel | Waktu t (µs) | dt (t_i - t_{i-1}) | Error (dt - 5000) | |Error|
+-------------------------------------------------------------------------
+  1    | 100.000      |         -          |         -         |    -
+  2    | 105.020      |       5.020        |       +20 µs      |  20 µs
+  3    | 110.010      |       4.990        |       -10 µs      |  10 µs
+  4    | 115.050      |       5.040        |       +40 µs      |  40 µs
+  5    | 120.045      |       4.995        |        -5 µs      |   5 µs
+  6    | 125.060      |       5.015        |       +15 µs      |  15 µs
+  7    | 130.080      |       5.020        |       +20 µs      |  20 µs
+  8    | 135.070      |       4.990        |       -10 µs      |  10 µs
+  9    | 140.090      |       5.020        |       +20 µs      |  20 µs
+ 10    | 145.100      |       5.010        |       +10 µs      |  10 µs
+ 11    | 150.130      |       5.030        |       +30 µs      |  30 µs
+ 12    | 155.120      |       4.990        |       -10 µs      |  10 µs
+ 13    | 160.140      |       5.020        |       +20 µs      |  20 µs
+ 14    | 165.135      |       4.995        |        -5 µs      |   5 µs
+ 15    | 170.180      |       5.045        |       +45 µs      |  45 µs
+ 16    | 175.170      |       4.990        |       -10 µs      |  10 µs
+ 17    | 180.200      |       5.030        |       +30 µs      |  30 µs
+ 18    | 185.195      |       4.995        |        -5 µs      |   5 µs
+ 19    | 190.210      |       5.015        |       +15 µs      |  15 µs
+ 20    | 195.350      |       5.140        |      +140 µs      | 140 µs
+-------------------------------------------------------------------------
+Jumlah interval dihitung = 19 data.
+
+Langkah 2: Urutkan Nilai |Error| (Ascending Sorting)
+Data terurut (19 nilai):
+[5, 5, 5, 10, 10, 10, 10, 10, 15, 15, 20, 20, 20, 20, 30, 30, 40, 45, 140]
+
+Langkah 3: Hitung Posisi Persentil
+- Median (p50):
+    Posisi = ceil(0,50 * 19) = 10 -> data ke-10 = 15 µs.
+- p95 (Persentil 95):
+    Posisi = ceil(0,95 * 19) = 19 -> data ke-19 (sebelum outlier terakhir) = 45 µs.
+- Maksimum Error:
+    Data teratas = 140 µs (hanya terjadi 1 kali).
+
+Langkah 4: Evaluasi terhadap Ambang Batas (Threshold)
+- Syarat PRD: Jitter p95 harus <= 500 µs (0,5 ms).
+- Hasil Nyata: Jitter p95 = 45 µs.
+- KESIMPULAN: LOLOS UJI (PASS / EXCELLENT).
+  Sinyal akuisisi stabil dan siap digunakan untuk analisis FFT getaran jembatan.
+
+
+================================================================================
+6. RINGKASAN AMBANG BATAS SESUAI DOKUMEN TARGET PRD
+================================================================================
+
+Berdasarkan PRD Kesiapan Evaluasi SIMON BATAPA (Versi 1.1, Bab 8):
+
++-----------------------+-----------------------------+-----------------------+
+| Parameter Metrik      | Batas Toleransi (Threshold) | Arti / Kriteria       |
++-----------------------+-----------------------------+-----------------------+
+| Jitter p95 Absolut    | <= 0,5 ms (500 µs)          | 95% data selisihnya   |
+| (pada 200 Hz)         |                             | tidak lebih dari 0,5ms|
++-----------------------+-----------------------------+-----------------------+
+| Deviasi Sampling Rate | <= 1% dari target           | Untuk 200 Hz:         |
+|                       |                             | rentang 198 - 202 Hz  |
++-----------------------+-----------------------------+-----------------------+
+| Duplikasi Ekspor      | 0 (Nol Duplikat)            | Tidak boleh ada baris |
+|                       |                             | ganda dengan id sama  |
++-----------------------+-----------------------------+-----------------------+
+| Kelengkapan Arsip     | 100% pada kondisi nominal   | Tidak ada sampel drop |
++-----------------------+-----------------------------+-----------------------+
+
+Dokumen ini disimpan otomatis oleh sistem untuk referensi analisis data dan
+penulisan laporan evaluasi teknis.
+================================================================================

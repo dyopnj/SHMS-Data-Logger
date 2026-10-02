@@ -1,73 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <script>document.documentElement.classList.toggle('dark',(localStorage.getItem('theme')||'dark')==='dark')</script>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script src="assets/js/tailwind-config.js"></script>
-<link rel="stylesheet" href="assets/style.css">
-<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SHMS - Logs</title>
+<link rel="icon" type="image/png" href="/assets/js/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 </head>
-<body class="bg-background text-on-background antialiased overflow-hidden h-screen flex">
-<div id="sidebar"></div>
-<main class="ml-[260px] flex-grow flex flex-col h-screen relative w-full">
-<div id="header"></div>
-<div class="flex-grow overflow-y-auto p-margin-desktop bg-background flex flex-col">
+<body>
 
-  <!-- Export Configuration -->
-  <section class="mb-8 p-6 bg-surface-container-low rounded-lg border border-outline-variant">
-    <h2 class="text-headline-md font-bold text-primary mb-6">Export Configuration</h2>
-    <div class="flex flex-wrap items-end gap-4">
-      <div class="flex flex-col gap-2 w-fit">
-        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Node ID</label>
-        <select id="exportNode" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-6 py-2 focus:ring-1 focus:ring-primary w-full">
-          <option value="node_01">Node 01</option>
-          <option value="node_02">Node 02</option>
-        </select>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/logoremoved.png" alt="SHMS" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">Bridge Monitor</span>
+        <span class="brand-sub"><i class="dot dot-active"></i><span id="nodeStatus">NODE STATUS: ACTIVE</span></span>
       </div>
-      <div class="flex flex-col gap-2 w-fit">
-        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">Start Time</label>
-        <input id="exportStart" type="datetime-local" step="1" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-3 py-2 focus:ring-1 focus:ring-primary w-full">
-      </div>
-      <div class="flex flex-col gap-2 w-fit">
-        <label class="text-[10px] uppercase tracking-widest font-label-mono text-on-surface-variant">End Time</label>
-        <input id="exportEnd" type="datetime-local" step="1" class="bg-surface-variant border-none text-sm text-on-surface-variant rounded px-3 py-2 focus:ring-1 focus:ring-primary w-full">
-      </div>
-      <button id="btnExport" class="flex items-center justify-center gap-2 bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold hover:opacity-90 transition-all active:scale-95 w-fit">
-        <span class="material-symbols-outlined">download</span>
-        Export to CSV
-      </button>
     </div>
-  </section>
 
-  <!-- Export History -->
-  <section class="p-6 bg-surface-container-low rounded-lg border border-outline-variant flex-grow h-full">
-    <h2 class="text-headline-md font-bold text-primary mb-6">Export History</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="bg-surface-container-high text-on-surface-variant text-[10px] uppercase tracking-widest font-label-mono">
-            <th class="p-3 border-b border-outline-variant">Export Time</th>
-            <th class="p-3 border-b border-outline-variant">Node ID</th>
-            <th class="p-3 border-b border-outline-variant">Time Range</th>
-            <th class="p-3 border-b border-outline-variant">Filename</th>
-          </tr>
-        </thead>
-        <tbody id="exportHistoryBody" class="text-sm text-on-surface font-label-mono">
-          <tr class="hover:bg-surface-variant/50 border-b border-outline-variant/30">
-            <td class="p-3 text-on-surface-variant" colspan="4">Belum ada data export</td>
-          </tr>
-        </tbody>
-      </table>
+    <nav class="nav">
+      <a href="home.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="analysis.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 8-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Analysis</span>
+      </a>
+      <a href="logs.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="8" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Logs</span>
+      </a>
+      <a href="settings.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a href="logs.html" class="btn-export">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Export Report
+      </a>
+      <a href="index.html" class="link-logout">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Logout
+      </a>
     </div>
-  </section>
+  </aside>
 
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Data Logs</h1>
+        <p class="page-sub">Ekspor data sensor per node dalam rentang waktu tertentu.</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Theme toggle" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Export Configuration -->
+    <section class="card section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Export Configuration</span>
+      </div>
+
+      <div class="export-row">
+        <div class="field">
+          <label class="field-label" for="exportNode">Node ID</label>
+          <select id="exportNode" class="field-select">
+            <option value="node_01">Node 01</option>
+            <option value="node_02">Node 02</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="exportStart">Start Time</label>
+          <input id="exportStart" type="datetime-local" step="1" class="field-input field-mono">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="exportEnd">End Time</label>
+          <input id="exportEnd" type="datetime-local" step="1" class="field-input field-mono">
+        </div>
+
+        <button id="btnExport" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Export to CSV
+        </button>
+      </div>
+    </section>
+
+    <!-- Export History -->
+    <section class="card section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="5" rx="8" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Export History</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Export Time</th>
+              <th>Node ID</th>
+              <th>Time Range</th>
+              <th>Filename</th>
+            </tr>
+          </thead>
+          <tbody id="exportHistoryBody">
+            <tr>
+              <td class="table-empty" colspan="4">Belum ada data export</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z" stroke="currentColor" stroke-width="1.6"/></svg>
+      2026 SHMS &nbsp;|&nbsp; SIMON BATAPA PROFESSIONAL SERIES
+    </footer>
+
+  </main>
 </div>
-</main>
+
 <script src="assets/js/app.js"></script>
 <script src="assets/js/logs.js"></script>
 </body>

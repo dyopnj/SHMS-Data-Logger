@@ -111,11 +111,4 @@ const char* NODE_ID = "node_01";
 
 ## Mock Publisher
 
-Folder `mock/` — simulasi data sensor untuk testing tanpa hardware.
-
-```bash
-npm run dev          # (dari terminal 1 — backend)
-npx tsx mock/publisher.ts   # (dari terminal 2 — mock)
-```
-
-Menerbitkan data palsu tiap 1 detik untuk kedua node, termasuk raw window tiap 30 detik.
+> **Dihapus.** Mock publisher (`mock/publisher.ts`) sudah di-revert. Untuk testing tanpa hardware, buat ulang mock publisher atau gunakan node ESP32 fisik.
